@@ -2,7 +2,7 @@
 title: | 
        | The Nim programming language
        | First Draft -- not checked for spell
-author: edu500ac
+author: Victor Della-Vos
 rights: MIT License
 language: en-US
 tags: [book]
