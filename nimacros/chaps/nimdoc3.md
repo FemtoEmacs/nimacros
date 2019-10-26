@@ -266,7 +266,7 @@ macro rpt(ix: untyped, cnt: int, statements: untyped)=
 
 rpt j, paramStr(1).parseInt :
   magicWord:
-     echo j, "- Give me some bear"
+     echo j, "- Give me some beer"
      echo "Now"
 ```
 
@@ -291,7 +291,7 @@ will rewrite the macro form...
 ```Nim
 rpt j, paramStr(1).parseInt :
   magicWord:
-     echo j, "- Give me some bear"
+     echo j, "- Give me some beer"
      echo "Now"
 ```
 
@@ -300,7 +300,7 @@ rpt j, paramStr(1).parseInt :
 ```Nim
 for j in 1..paramStr(1):
   magicWord:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 	echo "Now"
 ```
 Then, the `magicWord` macro will add `", Please"` to
@@ -309,7 +309,7 @@ the `echo` statements:
 ```Nim
 for j in 1..paramStr(1):
   magicWord:
-    echo j, "- Give me some bear, Please."
+    echo j, "- Give me some beer, Please."
 	echo "Now, Please."
 ```
 
@@ -338,9 +338,9 @@ nim c -o:quoteLoop.x -d:danger --hints:off quoteLoop.nim
 
 ~/nim/tutorial/src
 › ./quoteLoop.x 2
-1- Give me some bear, Please.
+1- Give me some beer, Please.
 Now, Please.
-2- Give me some bear, Please.
+2- Give me some beer, Please.
 Now, Please.
 ```
 
@@ -388,9 +388,9 @@ CC: stdlib_system.nim
 
 ~/nim/tutorial/src
 › ./quoteLoop.x 3
-1- Give me some bear, Please.
-2- Give me some bear, Please.
-3- Give me some bear, Please.
+1- Give me some beer, Please.
+2- Give me some beer, Please.
+3- Give me some beer, Please.
 ```
 
 \pagebreak
@@ -818,7 +818,7 @@ macro rpt(cmd: untyped, stmts: untyped): untyped =
   echo result.repr
 
 rpt paramStr(1).parseInt times -> j:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
     echo "Now"
 ```
 
@@ -1034,15 +1034,15 @@ macro cnt(cmd: untyped, stmts: untyped): untyped =
   echo result.repr
 
 cnt j paramStr(1).parseInt:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 
 #[ › make APP=counter
    nim c -o:counter.x -d:danger --hints:off --nimcache:lixo counter.nim
    for j in 1 .. paramStr(1).parseInt:
-       echo j, "- Give me some bear"
+       echo j, "- Give me some beer"
    › ./counter.x 2
-   1- Give me some bear
-   2- Give me some bear
+   1- Give me some beer
+   2- Give me some beer
 ]#
 
 ```
@@ -1086,15 +1086,15 @@ macro rpt(cmd: untyped, stmts: untyped): untyped =
       `stmts`
 
 rpt j ++= paramStr(1).parseInt:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 
 #[
 › nim c -o:infixLoop.x -d:danger --hints:off infixLoop.nim
 
 › ./infixLoop.x 3
-1- Give me some bear
-2- Give me some bear
-3- Give me some bear
+1- Give me some beer
+2- Give me some beer
+3- Give me some beer
 ]#
 ```
 
@@ -1137,7 +1137,7 @@ macro iter(cmd: untyped, stmts: untyped): untyped =
   result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, stmts))
 
 iter 3..paramStr(1).parseInt -> j:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 ```
 
 (@akavelIter) An iterating program by akavel
@@ -1151,9 +1151,9 @@ nim c -o:akavelIter.x -d:danger --hints:off akavelIter.nim
 
 ~/nim/nimacros/src master ×
 › ./akavelIter.x 5
-3- Give me some bear
-4- Give me some bear
-5- Give me some bear
+3- Give me some beer
+4- Give me some beer
+5- Give me some beer
 ```
 
 Program @akavelIter shows that different people choose
@@ -1211,7 +1211,7 @@ macro iter(cmd: untyped, sts: untyped): untyped =
   result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, sts))
 
 iter (3..paramStr(1).parseInt) times -> j:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
     echo "Now"
 
 ```
