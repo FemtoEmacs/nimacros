@@ -17,5 +17,5 @@ macro cnt(cmd: untyped, stmts: untyped): untyped =
   echo result.repr
 
 cnt j paramStr(1).parseInt:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 
