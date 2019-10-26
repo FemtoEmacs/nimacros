@@ -22,6 +22,6 @@ macro rpt(cmd: untyped, stmts: untyped): untyped =
   echo result.repr
 
 rpt 3 times -> j:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
     echo "Now"
 
