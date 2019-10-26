@@ -16,5 +16,5 @@ macro rpt(cmd: untyped, stmts: untyped): untyped =
       `stmts`
 
 rpt j ++= paramStr(1).parseInt:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 
