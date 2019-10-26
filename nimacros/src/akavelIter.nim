@@ -11,5 +11,5 @@ macro iter(cmd: untyped, stmts: untyped): untyped =
   result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, stmts))
 
 iter 3..paramStr(1).parseInt -> j:
-    echo j, "- Give me some bear"
+    echo j, "- Give me some beer"
 
