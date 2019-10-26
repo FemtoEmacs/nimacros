@@ -1121,6 +1121,104 @@ It seems that infix expressions do not have length.
 I would never discover this if I have not been
 practicing in the last three days. 
 
+# Tree constructors
+
+```Nim
+# make APP=akavelIter
+import macros, strutils, os
+
+macro iter(cmd: untyped, stmts: untyped): untyped =
+  expectKind(cmd, nnkInfix)
+  expectKind(cmd[0], nnKIdent)
+  doAssert cmd[0].strVal == "->"
+  expectKind(cmd[2], nnkIdent)
+  expectKind(stmts, nnkStmtList)
+  let (ix, rng) = (cmd[2], cmd[1])
+  result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, stmts))
+
+iter 3..paramStr(1).parseInt -> j:
+    echo j, "- Give me some bear"
+```
+
+(@akavelIter) An iterating program by akavel
+
+Here is an example of running iter:
+
+```
+~/nim/nimacros/src master ×
+› make APP=akavelIter
+nim c -o:akavelIter.x -d:danger --hints:off akavelIter.nim
+
+~/nim/nimacros/src master ×
+› ./akavelIter.x 5
+3- Give me some bear
+4- Give me some bear
+5- Give me some bear
+```
+
+Program @akavelIter shows that different people choose
+different solutions to the same problem.
+The programmer whose nickname is *vindaar* used a quote
+pattern for creating the Abstract Syntactic Tree of a loop.
+
+Another programmer, whose nickname is *akavel*, I believe
+his true name is Mateusz Czapliński, prefer to use the
+tree constructor directly.
+
+Languages such as Lisp and Scheme use the same kind of
+node for any tree,
+the `consp` data structure, therefore, Lisp and Scheme
+need only a tree constructor, to wit, the `cons` function.
+In an Abstract Syntactic Tree, when it is necessary to
+differenciate a node from the other, a Lisp programmer
+put the identifier first in the list of ramifications.
+An elegant solution that makes Lisp so terse and powerful.
+
+The design of Nim opted by using different nodes. Consider
+the program of listing @akavelIter. The node that represents
+the statement list, `nnkStmtList`, is completely different
+from the `nnkForStmt` node, which represents the `for-loop`.
+The Nim approach to AST construction has the advantage of
+preventing a kind of error that is very common in Lisp,
+which is inserting a wrong node identifier in the tree.
+However, the Nim system has also a serious drawback, which
+is memorizing a different node constructing method for
+each kind of node.
+
+In listing @akavelLoop below, you will find a variation
+of the `iter` loop. As far as I understand, a Nim command
+has two components, the part that comes before the colon,
+and the part that comes after the colon. The difference
+between listings @akavelIter and @akavelLoop is restricted
+to the syntax of the part that comes before the colon.
+
+```
+# make APP=akavelLoop
+import macros, strutils, os
+
+macro iter(cmd: untyped, sts: untyped): untyped =
+  # Checking syntax of command
+  expectKind(cmd, nnkCommand)
+  doAssert cmd.len == 2
+  expectKind(cmd[1], nnkInfix)
+  for i in 0..2: expectKind(cmd[1][i], nnkIdent)
+  doAssert cmd[1][0].strVal == "->"
+  doAssert cmd[1][1].strVal == "times"
+  expectKind(sts, nnkStmtList)
+  let
+    rng = cmd[0]
+    ix = cmd[1][2]
+  result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, sts))
+
+iter (3..paramStr(1).parseInt) times -> j:
+    echo j, "- Give me some bear"
+    echo "Now"
+
+```
+
+(@akavelLoop) A more elaborate syntax for `iter`
+
+
 # Nightmares
 I was born in Provo, a small town in Utah, about 82 miles
 from Salt Lake City. If you are not acquainted with
