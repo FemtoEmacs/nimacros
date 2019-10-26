@@ -16,5 +16,5 @@ macro rpt(ix: untyped, cnt: int, statements: untyped)=
 
 rpt j, paramStr(1).parseInt :
   magicWord:
-     echo j, "- Give me some bear"
+     echo j, "- Give me some beer"
      echo "Now"
