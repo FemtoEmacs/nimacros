@@ -2,7 +2,7 @@
 import macros, strutils, os
 
 proc parseArgs(cmd: NimNode): (NimNode, NimNode) =
-  doAssert cmd.len == 1
+  doAssert cmd.len == 2
   expectKind(cmd[1], nnkInfix)
   expectKind(cmd[1][0], nnkIdent)
   expectKind(cmd[1][1], nnkIdent)
@@ -21,7 +21,7 @@ macro rpt(cmd: untyped, stmts: untyped): untyped =
       `stmts`
   echo result.repr
 
-rpt 3 times -> j:
+rpt paramStr(1).parseInt times -> j:
     echo j, "- Give me some beer"
     echo "Now"
 

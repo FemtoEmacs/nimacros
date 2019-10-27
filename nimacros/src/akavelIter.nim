@@ -10,6 +10,6 @@ macro iter(cmd: untyped, stmts: untyped): untyped =
   let (ix, rng) = (cmd[2], cmd[1])
   result = nnkStmtList.newTree(nnkForStmt.newTree(ix, rng, stmts))
 
-iter 3..paramStr(1).parseInt -> j:
+iter 2..paramStr(1).parseInt -> j:
     echo j, "- Give me some beer"
 
