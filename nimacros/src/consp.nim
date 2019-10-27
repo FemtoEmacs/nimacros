@@ -1,3 +1,4 @@
+# Library: consp.nim
 import strutils, macros
 type
   SExprKind = enum Intp, Floatp, St, Sym, consp
@@ -11,7 +12,6 @@ type
 
 template mI*(a:int): SExpr= SExpr(kind: Intp, intVal: a)
 template sy*(s: string): SExpr= SExpr(kind: Sym, symb: `s`)
-template mS*(s:string): SExpr= SExpr(kind: St, str: s)
 template car*(s:SExpr): SExpr= s.h
 template cdr*(s:SExpr): Sexpr= s.t
 template cons*(x:SExpr, y:SExpr): SExpr= SExpr(kind: consp, h: x, t: y)
@@ -24,13 +24,10 @@ proc `$`*(se: SExpr): string =
   of Sym: result = se.symb
   of consp:
     result.add("(")
-    var r = se
-    if r != nil:
-      result.add($r.car)
-      r= r.cdr
+    var (r, ind) = (se, 0)
     while r != nil:
-      result.add(indent($r.car, 2))
-      r= r.cdr
+      result.add(indent($r.car, ind))
+      (r, ind)= (r.cdr, 1)
     result.add(")")
 
 let plus*{.compileTime.}=  "+".sy
@@ -40,10 +37,8 @@ proc walkAST*(e:SExpr): NimNode =
      of Intp: return newLit e.intVal
      of consp:
        if car(e) == plus:
-         var callTree = nnkCall.newTree()
-         callTree.add newIdentNode"+"
-         callTree.add e.cdr.car.walkAST
-         callTree.add e.cdr.cdr.car.walkAST
-         return callTree
+         return nnkCall.newTree( newIdentNode"+",
+                                 e.cdr.car.walkAST,
+                                 e.cdr.cdr.car.walkAST)
      else: return newLit "Erro"
 

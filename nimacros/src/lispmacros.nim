@@ -1,3 +1,4 @@
+# nim c -o:cons.x -d:danger --hints:off --nimcache:xx lispmacros.nim 
 import os, strutils, macros, consp
 
 macro def(id:untyped, x:untyped, y:untyped): untyped=
@@ -10,9 +11,6 @@ macro def(id:untyped, x:untyped, y:untyped): untyped=
 
 def(sum, cx, cy)
 
-proc main() =
-    echo cons("hi".sy, cons(cons("world".sy, nil), nil))
-    echo sum(paramStr(1).parseInt, 8)
-
-main()
+echo cons("hi".sy, cons(42.mI, cons(cons("world".sy, nil), nil)))
+echo sum(paramStr(1).parseInt, 8)
  

@@ -1218,6 +1218,95 @@ iter (3..paramStr(1).parseInt) times -> j:
 
 (@akavelLoop) A more elaborate syntax for `iter`
 
+# A Lisp-like macro toolkit
+
+```Nim
+# nim c -o:cons.x -d:danger --hints:off --nimcache:xx lispmacros.nim 
+import os, strutils, macros, consp
+
+macro def(id:untyped, x:untyped, y:untyped): untyped=
+  let ix= x.strVal.sy
+  let iy= y.strVal.sy
+  let body= cons(plus, cons(ix, cons(iy, nil))).walkAST
+  quote do:
+    proc `id`(`x`: int, `y`: int): int=
+       `body`
+
+def(sum, cx, cy)
+
+echo cons("hi".sy, cons(42.mI, cons(cons("world".sy, nil), nil)))
+echo sum(paramStr(1).parseInt, 8)
+ 
+```
+
+(@defsum) A Lisp style macro
+
+Here is an example of the above program in action:
+
+```
+› nim c -o:cons.x -d:danger --hints:off --nimcache:xx lispmacros.nim
+› ./cons.x 34
+(hi 42 (world))
+42
+```
+
+In Lisp, it is customary to represent any kind of tree as a combination
+of binary trees. The great advantage of this approach is that Lisp
+programmers need to learn only one constructor of branches, the `cons`
+node. In a future version of this tutorial, I intend to give a lengthy
+introduction to the Lisp method of dealing with tree. One last thing,
+in order to compile the program of listing @defsum, you need to keep
+the library of listing @consp in the same folder.
+
+
+\pagebreak
+```Nim
+# Library: consp.nim
+import strutils, macros
+type
+  SExprKind = enum Intp, Floatp, St, Sym, consp
+  SExpr = ref object
+       case kind: SExprKind
+       of Intp: intVal: int
+       of Floatp: floatVal: float
+       of Sym: symb: string
+       of St: str: string
+       of consp: h, t: SExpr
+
+template mI*(a:int): SExpr= SExpr(kind: Intp, intVal: a)
+template sy*(s: string): SExpr= SExpr(kind: Sym, symb: `s`)
+template car*(s:SExpr): SExpr= s.h
+template cdr*(s:SExpr): Sexpr= s.t
+template cons*(x:SExpr, y:SExpr): SExpr= SExpr(kind: consp, h: x, t: y)
+
+proc `$`*(se: SExpr): string =
+  case se.kind
+  of Intp: result= $se.intVal
+  of Floatp: result = $se.floatVal
+  of ST: result = '"' & se.str & '"'
+  of Sym: result = se.symb
+  of consp:
+    result.add("(")
+    var (r, ind) = (se, 0)
+    while r != nil:
+      result.add(indent($r.car, ind))
+      (r, ind)= (r.cdr, 1)
+    result.add(")")
+
+let plus*{.compileTime.}=  "+".sy
+proc walkAST*(e:SExpr): NimNode =
+   case e.kind:
+     of Sym: return newIdentNode e.symb
+     of Intp: return newLit e.intVal
+     of consp:
+       if car(e) == plus:
+         return nnkCall.newTree( newIdentNode"+",
+                                 e.cdr.car.walkAST,
+                                 e.cdr.cdr.car.walkAST)
+     else: return newLit "Erro"
+```
+
+(@consp) A Library for the `consp` data structure
 
 # Nightmares
 I was born in Provo, a small town in Utah, about 82 miles
