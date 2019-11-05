@@ -24,16 +24,14 @@ main()
 ]#
 ```
 
-The program above calculate the average of comma separated values.
-Everything that comes between `#[` and `]#` is comments. Therefore,
-the comments are giving an example of how to compile and use the
-program. Text that comes after `#` and the end of line is a comment
-as well. This second kind of comment is used is very common in shell
-commands.
-
-The `split(Whitespace+{','})` operation splits a string with
-values that can be separated by any combination of chars that
-belong to the `Whitespace+{','}` set. Since `split` produces
+The above program calculates the average of comma separated values.
+Everything that comes between `#[` and `]#` is a comment. In the
+listing above, the comments provide an example of how to compile and
+use the program.  Text that comes after `#` and the end of a line
+is also a comment. This second kind of comment is very common in
+shell commands. The `split(Whitespace+{','})` operation splits a
+string with values that can be separated by any combination of chars
+that belong to the `Whitespace+{','}` set. Since `split` produces
 empty `""` strings, the program applies `filter(x => x.len > 0)`
 to the result, in order to eliminate zero-length strings from
 the sequence.
@@ -72,21 +70,21 @@ src> ./ird.x csv.data
 ```
 
 In the procedure that reads a file and splits it
-into a sequence of `int`, the split function
+into an `int` sequence, the split function
 generates empty strings at the end of the file
 and possibly at the end of each line as well.
 Therefore, I designed an iterator that feeds
 a `for-loop` with  valid strings that can be
-parsed to floats, which one can use to calculate
+parsed into floats, which one can use to calculate
 the average of a sequence of values.
 
 In Nim, iterators are as easy to design as normal
 functions. In fact, iterators are functions that
 produce values more than once. They are defined like
 procedures, but the keyword *iterator* replaces
-the keyword *proc* that defines procedures. Another
-difference between iterators and functions is that
-an iterator uses the keyword *yield*, instead of
+the keyword *proc* that defines procedures.
+Another difference between iterators and functions is
+that an iterator uses the keyword *yield*, instead of
 the keyword *return* to produce a value. In general,
 iterators are used to feed a `for-loop` with a sequence
 of values. After yielding a value, the iterator can

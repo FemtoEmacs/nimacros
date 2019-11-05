@@ -1,6 +1,7 @@
 D=
 PDF_ARGS = -V geometry:margin=1in -V documentclass=report
 SYNTAX= --syntax-definition nimrod.xml
+ENG= --pdf-engine=xelatex
 
 ifeq ($(D),)
 abort:

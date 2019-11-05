@@ -9,6 +9,9 @@ tags: [book]
 fontsize: 12pt
 numbersections: true
 header-includes:
+   \usepackage[utf8]{inputenc}
+   \usepackage[T1]{fontenc}
+   \usepackage{textalpha}
    \usepackage{tikz}
    \usepackage{upquote} 
    \usepackage{wrapfig}

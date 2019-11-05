@@ -1,0 +1,573 @@
+# State machines
+My private library has many books in Ancient Greek,
+Latin, German, Esperanto, French, Japanese, Chinese,
+Guarany, Russian and other languages that I don't
+speak. Even so, I read the first two pages of these
+books, to know whether it was worthwhile to learn the
+language and read until the end. War and Peace is
+written in French and Russian, thus I read the French
+part of the first page and put the book back on the
+shelf, where it remained over many years as a feast for
+cockroaches that ate the glue on the cover.
+
+Keeping with my bad reading habits, I read only the first
+page of Wittgenstein's Tratactus Logico-Philosophicus,
+which has a title in Latin, but is written in German.
+Here is the first line of the Tratactus:
+
+> 1. Die Welt ist alles, was der Fall ist.
+> 1.1 Die Welt ist die Gesamtheit der Tatsachen,
+> nicht der Dinge.
+
+On the first line, an English speaker can recognize a
+lot of words, for instance, *Welt* must mean *World*,
+*alles* can be translated by *all* and *Fall* is *fall*.
+There was that Roman deity, Fortune, who decided the
+destiny of the World by throwing dice. It seems that
+Wittgenstein is saying that the World is all that the
+state of the Fortune's dice indicates that it is.
+
+On the second line, Wittgenstein is saying that the
+World is the totality of facts, not of things. Of course,
+things do exist, but the World is something beyond a
+set of things. What is the entity, which is beyond a mere
+collection of things? Let us read a little further to
+see if the philosopher sheds light on the subject.
+
+> Was der Fall ist, die Tatsache, ist das Bestehen von
+> Sachverhalten.
+
+David Pears translates the above line as
+
+> *What is a case -- a fact -- is  the existence of
+> states of affairs.*
+
+In Latin, the word *STATUS* (Romans used to write only
+in uppercase letters) means the temporary attributes of
+a person or thing. What is an attribute? It is the
+position, station, place, posture, order, arrangement,
+condition, characteristic, aspect, feature, quality or
+trait that a thing can have. An attribute has values,
+for instance, the attribute *color* can have values such
+as red, green, blue, yellow, etc. The *position* attribute
+can be given by the values  of the Cartesian coordinates
+of the object.
+
+Computers are state machines, therefore they are good
+for modeling the world and its evolution through change
+of states. Computers themselves have registers, where they
+can store the values of the attributes that the machine
+represents. Computer programs abstract the registers into
+variables. Therefore, a program represents states by sets
+of values for its variables. To understand this point, let
+us consider a concrete problem.
+
+```Nim
+# File: zeller.nim
+import os, strutils
+
+proc roman_order(m : int): int=
+  let wm= (14 - m) div 12
+  result= m + wm*12 - 2
+
+proc zr(y:int, m:int, day:int): int=
+  let
+    roman_month= roman_order(m)
+    roman_year= y - (14 - m) div 12
+    century=  roman_year div 100
+    decade= roman_year mod 100
+  result= (day + (13*roman_month - 1) div 5 +
+                 decade + decade div 4 +
+                 century div 4 +
+                 century * -2) mod 7
+
+proc main () =
+  let
+    year = paramStr(1).parseInt
+    month = paramStr(2).parseInt
+    day = paramStr(3).parseInt
+  echo zr(year, month, day)
+
+main()
+```
+
+(@zeller) Day of the week by Zeller's congruence
+
+You certainly know that the word `December` means
+the tenth month; it comes from the Latin word for
+ten, as attested in words such as:
+
+- decimal -- base ten.
+- decimeter -- tenth part of a meter.
+- decimate -- the killing of every tenth Roman soldier
+              that performed badly in battle.
+
+October is named after the Latin numeral for *eighth*.
+In fact, the radical *Oct-* can be translated as *eight*,
+like in *octave*, *octal*, and *octagon*. One could
+continue   with this exercise, placing September in the
+seventh, and November in the ninth position in the
+sequence of months. But everybody and his brother know
+that December is the twelfth, and that October is the
+tenth month of the year. Why did the Romans give
+misleading  names to these months?
+
+Rome was purportedly founded by Romulus, who designed a
+calendar. March was the first month of the year in the
+Romulus calendar.  In order to get acquainted with
+programming and the accompanying concepts, let us follow
+the Canadian programmer Nia Vardalos, while she explores
+the Nim programming language and calendar calculations.
+
+If Nia wants the order for a given month in this mythical
+calendar created by Romulus, she must subtract 2 from the
+order in the Gregorian calendar, which happens to be in
+current use in the Western World since it was instituted by
+Pope Gregory XIII in 1582. After the subtraction, September
+becomes the seventh month; October, the eight; November,
+the ninth and December, therefore, the tenth month.
+
+Farming and plunder were the main occupations of the Romans,
+and since winter is not the ideal season for either of these
+activities, the Romans did not care much for January and
+February. However, Sosigenes of Alexandria, at the request
+of Cleopatra and Julius Cæsar, designed the Julian calendar,
+where January and February, the two deep winter months, appear
+in  positions 1 and 2 respectively. Therefore, a need for a
+formula that converts from the modern month numbering to the
+old sequence has arisen. In listing @zeler, this is done
+by the following algorithm:
+
+```Nim
+
+proc roman_order(m : int): int=
+  let wm= (14 - m) div 12
+  result= m + wm*12 - 2
+
+```
+
+In the above formula, the variable `wm` will pick the value 1
+for months 1 and 2, and 0 for months from 3 to 12. In fact,
+for months from 3 to 12, `(14-m)` produces a number less
+than 12, and `(14-m) div 12` is equal to 0. Therefore, the
+state of the program for all months from March through December
+is given by `wm=0` and `result=m-2`. The fact is that, when
+the variable `wm=0`, the expression to calculate `result` 
+reduces from `result=m+wm×12-2` to `result=m-2`. This means
+that March will become the Roman month 1, and December will
+become the Roman month 10.
+
+The variable `wm` models the state of the world in during
+the winter months. By the way, `wm` stands for *winter months*.
+Since January is month 1, and February is month 2 in the Gregorian
+calendar, `wm` is equal to 1 for these two winter months. In the
+case of January, the state is given by: `m=1`, `wm=1`, `result=11`.
+For February, the state becomes `m=2`, `wm=1`, `result=10`.
+
+
+The program of listing @zeller calculates the day of the week
+through Zeller's congruence. In the procedure `zr(y, m, day)`,
+the let-statement binds values to the following state variables:
+`roman_month`, `roman_year`, `century`, `decade`. Listing @zeller
+shows that a state variable avoids recalculating values that appear
+more than once in a program. This is the case of `roman_year`,
+which appears four times in the `zr(y,m,day)` procedure. Besides
+this, by identifying important subexpressions with meaningful names,
+the program becomes clearer and cleaner.
+
+## Compile and run
+
+After compiling the program of listing @zeller, one can calculate
+the day of the week as a number between 0 and 6, corresponding to
+Sunday, Monday, Tuesday, Wednesday, Thursday, Friday and Saturday.
+For the time being, you do not need to worry about compilation
+and running a programa on the terminal. My intention is to
+dedicate a whole chapter to the use of a text terminal. In any
+case, here is an example of running the zeller congruence:
+
+```Shell
+› nim c -o:zeller.x -d:release --hints:off --nimcache:xx zeller.nim
+CC: zeller.nim
+
+› ./zeller.x 2016 8 31
+3
+
+```
+
+This means that August 31 of 2016 fell on Wednesday. 
+
+
+## Sequence of statement
+In linguistic, a statement is a declarative sentence that
+describes a state or a state variable. In a program, one
+may need a sequence of statements to determine all state
+variables. In the programming language Nim, a sequence of
+statements is indicated by the indentation, i.e., all
+statements that start at the same column belong to the
+same sequence.
+
+## Procedures
+
+In computer programming, a procedure is a sequence of
+statements that isolates and determine a state. In Nim,
+the procedure can cause change of state by performing
+destructive assignment into variables introduced by the
+key word `var`, but there is no way of changing the
+value of variables introduced by the keyword `let`, such
+as the variables that appear in listing @zeller.
+
+## How to repeat a sequence of statements
+
+During her life as a programmer, one may need to repeat a
+sequence of statements to generate a succession of steps
+that will approach an end state or value. This repetition
+process is called iteration after the Latin word for path.
+
+Leonardo Pisano Bigollo, a.k.a. Fibonacci, was speculating
+how fast is the reproduction of immortal rabbits. This
+breed of rabbits have the interesting properties of mating
+at the age of one month, thus, at the end of her second
+month, the female produces a new pair of rabbits, a male
+and a female. Then she keeps producing two babies a month
+for all the eternity.
+
+Fibonacci concluded that the number A~n~ of adult pairs
+in a given month is equal to the total number R~n-1~
+of rabbits, both babies and adults, in the previous month.
+The clever fellow also perceived that, since each adult
+pair produces two babies a month, the number of baby
+pairs in a given month is the number of adult pairs in
+the previous month, which is the total number of rabbits two
+months before. The total number of pairs of rabbits, that
+is adult plus baby, in a particular month is the sum
+of the pairs in the previous two months.
+
+```Nim
+import os, strutils
+
+proc fib(n: int): int =
+  var (r1, r2) = (1, 1)
+  for i in 2..n:
+    (r1, r2) = (r1+r2, r1)
+  result= r1
+
+echo fib(paramStr(1).parseInt)
+```
+
+In the above program, the iteration is controlled by the
+for-loop, that repeat a change of state over generations
+2 through `n` of rabbits. Here is how the program is
+compiled and executed:
+
+```
+› nim c --nimcache:xx -o:rabbits.x -d:release --hints:off iterfib.nim
+› ./rabbits.x 5
+8
+```
+
+## Recursion
+There is another way to discover the number of rabbit pairs in
+the previous generation, that is sum the number of pairs three
+generation ago with the number of pairs two generation ago.
+This reasoning does nothing else but applying the rule of
+finding the total number of pairs in the present generation to
+the previous generation. Here is a program that uses this idea:
+
+```Nim
+import os, strutils
+
+proc fib(n: int): int =
+  if n<2: result=1
+  elif n<3: result=n
+  else: result= fib(n-3)+fib(n-2)+fib(n-2)
+
+echo fib(paramStr(1).parseInt)
+```
+
+(@recfib) Recursive Fibonacci function
+
+The program of listing @recfib has many novelties. The first
+one is the conditional execution of a sequence of statements.
+For instance, `result=1` sets `result` to 1, but only if the
+condition `n<2` is met. On the same token, `result=n` sets
+`result` to `n`, if `n<3`.
+
+However, the most strange feature of listing @recfib, is the
+use of the `fib` function in the definition of `fib`. In
+other words, the definition of `fib` calls itself. When such
+a thing happens, computer scientists say that the definition
+is recursive.
+
+
+Typically a recursive definition has two kinds of conditions,
+which in Nim are introduced by the if-statement:
+
+- Trivial conditions, which can be resolved using primitive operations.
+- General conditions, which can be broken down into simpler cases.
+
+In listing @recfib, the trivial conditions are --
+
++ `if n<2: result=1`
++ `if n<3: result=n` 
+
+The general condition is introduced by the `else:` clause, and
+rewrite the expression `fib(n)` into the following expression:
+
+```Nim
+else: result= fib(n-3)+fib(n-2)+fib(n-2)
+```
+
+where each occurrence of a call to `fib` is closer to the trivial
+case than `fib(n)`, which was the original call.
+
+The mathematician Peano invented a very interesting axiomatic
+theory for natural numbers. I cannot remember the details,
+but the idea was something live the following:
+
+1. Zero is a natural number.
+2. Every natural number has a successor: The successor of 0 is 1, the
+successor of 1 is 2, the successor of 2 is 3, and so on.
+3. If a property is true for zero and, after assuming that it is true for n, you prove that it is true for n+1, then it is true for any natural number.
+
+Did you get the idea? For this very idea can be applied to many other
+situations, even in programming a computer.
+
+# Shell
+
+Nia, a Greek young woman, has an account on a well known social
+network. She visits her friends' postings on a daily basis, and
+when she finds an interesting picture or video, she presses
+the *Like*-button. However, when she needs to discuss her upcoming holidays on the Saba Island with her Argentinian boyfriend, she uses
+the live chat box. After all, hitting buttons and icons offers only
+a very limited interaction tool, and does not produce a highly
+detailed level of information that permits the answering of questions
+and making of statements.
+
+
+Using a chat service needs to be very easy and fun, otherwise all
+those teenage friends of Nia's would be doing something else.
+I am telling you this, because there are two ways of commanding
+a computer. The first is called Graphical User Interface (GUI)
+and consists of moving the cursor with a mouse or other pointing
+device and clicking over a menu option or an icon, such as
+the `Like` button. As previously mentioned, a Graphical User
+Interface often does not generate adequate information for making
+a request to the computer. In addition, finding the right object
+to press can become difficult in a labyrinth of menu options.
+
+The other method of interacting with the computer is known as
+Shell and is similar to a chat with one's own machine.
+
+In your computer, there is a giant program, called the operating
+system, which controls all peripherals that the machine uses to
+stay connected with the external world:pointing devices,  keyboard,
+video terminal, robots, cameras, solid state drives, pen drives,
+and other peripherals.
+
+
+In a Shell interface, Nia issues written instructions that the
+operating system answers by fulfilling the assigned tasks. The
+language that Nia uses to chat with the operating system is
+called *Bourne-again shell*, or bash for short. This language
+has commands to go through folders, browser files, create new
+directories, copy objects from one place to the other, configure
+the machine, install applications, change the permissions of a
+file, create groups to organize users and devices, etc. When
+accessing the operating system through a text-based terminal,
+a shell language is the main way of executing programs and doing
+work on a computer.
+
+The shell interface derives its name from the fact that it acts
+like a shell surrounding all other programs being run, and
+controlling everything the machine performs.
+
+
+In order not to scare off the feeble-minded, many operating
+systems hide access to the text terminal. In some distribution
+of Linux, you need to maintain the `Alt` key down, then press
+the `F2` key to open a dialog box, where you must type the
+name of the terminal you want to open. If you are really lucky,
+you may find the icon of the terminal  on the tool bar.
+
+If the way of opening the text terminal is not obvious, you
+should ask for help from a student majoring in Computer Science.
+You can teach her Russian, Sanskrit, Javanese or Ancient Greek,
+as a compensation for the time that she will spend explaining
+how to start a terminal in OS X or Linux. If you are afraid
+of paying for a few minutes of tutorial about the Bourne-again
+shell with hundred hours of classes onRussian, don't worry!
+The CS major will give up after barely starting the section
+on the alphabet. After all, Philology is much more difficult
+than Computer Engineering. For details, read the tale *The man
+who could speak Javanese* by Lima Barreto.
+
+
+## The prompt
+The shell prompt is where one types commands. The prompt
+has different aspects, depending on the configuration of
+the terminal. In Nia's machine, it looks something like
+this:
+
+```Shell
+~$ _
+```
+
+Files are stored in folders. Typically, the prompt shows the
+folder where the user is currently working. The main duty of
+the operating system is to maintain the contents of the mass
+storage devices in a tree structure of files and folders.
+Folders are also called *directories*, and like physical
+folders or cabinets, they organize files.
+
+A folder can be put inside another folder. In a given machine,
+there is a folder  reserved for duties carried out by the
+administrator. This special folder is called home or personal
+directory.
+
+Besides the administrator, a machine can have other rightful
+users, each with a personal folder. For instance, Nia's folder
+on her Mac OS X has the `/Users/nia` path. You will learn a more
+formal definition of path later on.
+
+## Commands
+Now, let us learn a few commands to control the terminal
+and get things done.
+
+### pwd {-#pwd} 
+The `pwd` command informs the user's position in the file
+tree. A folder can be placed inside another folder. For
+example, in a Macintosh, Nia's home folder is inside
+the `/Users` directory.
+
+One uses a path to identify
+a nest of folders. In a path, a subfolder
+is separated from the parent folder
+by a slash bar. If one needs to know
+the current folder, there is the `pwd`
+command. 
+
+```Shell
+~$ pwd      # shows the current folder.
+Users/nia
+```
+
+When Nia issues a command, she may add comments to it,
+so her boyfriend that does not know Bourne-again shell (bash)
+can understand what is going on and learn something in
+the process. Just like in Nim, comments are prefixed
+with the `#` hash char, as you can see in the above chat.
+Therefore, when the computer sees a `#` hash char, it ignores
+everything to the end of the line.
+
+### mkdir wrk {-#mkdir}
+The command **mkdir wrk** creates a `wrk` folder inside the
+current directory, where `wrk` can be replaced with any other
+name. For instance, if Nia is inside her home directory,
+`mkdir wrk` creates a folder with the `Users/nia/wrk` path.
+
+### cd wrk {-#cd} 
+One can use the `cd <folder name>` command to enter
+the named folder. The `cd ..`  command takes Nia to
+the parent of the current directory. Thanks to
+the `cd` command, one can navigate through the
+tree of folders and directories.
+
+Tab. If you want to go to a given directory, type part of
+the directory path, and then press *Tab*. The shell will
+complete the folder name for you.
+
+
+
+# Another computer language
+
+```Nim
+# nim c -d:release --nimcache:lixo -o:rd.x rd.nim
+import os, strutils, sequtils, sugar
+proc avg(xs: seq[float]): float =
+  result= 0.0
+  var n= 0.0
+  for x in xs:
+    result= result + x
+    n= n+1.0
+  result= result/n
+
+proc main() =
+  if paramCount() < 1: quit("Usage: " & paramStr(0) & " <filename.data>")
+  let s = readFile(paramStr(1)).splitWhitespace.map(x => x.parseFloat)
+  echo "Sum= ", s.foldl(a + b), " / Average= ", avg(s)
+
+main()
+```
+
+(@readfile) Read and process a file
+
+Let us find out how many students graduate from
+medical schools in California. The `grad.data`
+file gives the number of graduates from each
+school. The `rd.nim` program prints the addition
+and the average. Here is how to compile and run
+the program of listing @readfile:
+
+```
+src> nim c -o:rd.x -d:release rd.nim  # Compile 
+src> cat nums.data                    # Check the data
+190   45 23 34 89 96 78
+97 14 17 54 345 3 42
+
+src> ./rd.x nums.data                 # Run the program
+Sum= 1127.0 / Average= 80.5
+```
+
+\pagebreak
+The predicate `paramCount() < 1` checks whether the file name is
+present on the command line. If it is not, the program quits with
+a request for the file name. In the snippet below, taken from
+application @readfile, the `paramStr(0)` string contains the
+application name.
+
+```
+  if paramCount() < 1:
+    quit("Usage: " & paramStr(0) & " <filename.data>")
+```
+
+The local variable `s` receives the result of a sequence of
+operations concerning the file contents.
+
+The  `readFile(paramStr(1))` operation reads the file whose
+name is on the command line. The `nums.data` file contains
+space separated numbers that `.splitWhitespace` parses and
+produces a sequence of strings.
+
+Finally, `map(x => x.parseFloat)` transforms this sequence
+into floating point numbers that `foldl(a+b)` adds together.
+The `avg(xs: seq[float])` sums the floating point numbers
+together into the `result` variable and calculates the length of
+the sequence into `n`. The average is `result/n`.
+
+![](figs-prefix/bugcerto.jpg "Voyage to the moon"){width=250px}
+
+The first computer was constructed by Konrad Zuse,
+a German civil engineer, and his assistant,
+Ms. Ursula Walk, née Hebekeuser. Ancient computers,
+like those of Zuse and Walk, were based on relays.
+These are bulky electrical devices, typically incorporating
+an electromagnet, which is activated by a current
+in one circuit to turn on or off another circuit.
+Computers made of such a contrivance were enormous,
+slow, and unreliable. Therefore, on September 9th, 1945,
+a moth flew into one of the relays of the Harvard  Mark II
+computer and jammed it. From that time on, *bug* became
+the standard word to indicate an error that prevents
+a computer from working as intended.
+
+Due to bugs, compilers of languages like Nim and Haskell
+frequently return error messages, instead of generating
+code and running the corresponding programs. The Steel
+Bank Common Lisp language does not interrupt code
+generation when the compiler spots a bug, all the same
+it does issue warnings that help find the problem before
+the embarassment of failure is manifest on the client's
+terminal.
+
+
+

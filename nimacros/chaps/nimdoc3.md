@@ -21,13 +21,13 @@ main()
 ```
 
 You will find `exceptions` in many languages, therefore I
-believe that the program above will not pose difficulties.
+believe that the above program will not pose difficulties.
 The `avg` procedure does not try to eliminate invalid strings
 from the sequence. Since the program is not sure that the
 string represents a valid floating point number, it tries
 to parse it. If the `avg` procedure fails to parse a string,
-the error is captured in an exception section and discarded.
-Let us compile and test it:
+the error is captured in an exception section and immediately
+discarded. Let us compile and test it:
 
 ```
 › nim c -o:excrd.x -d:release --nimcache:del --hints:off excrd.nim
@@ -40,9 +40,9 @@ Let us compile and test it:
 \pagebreak
 I defined the `avg` procedure inside the `main` procedure,
 just to demonstrate that this is possible. The procedure `strip`
-eliminates blanks around the string, before parsing it to floating
-point numbers. This is not strictly necessary, but I did it just to
-be on the safe side.
+eliminates blanks surrounding the string, before parsing it to
+floating point numbers. This is not strictly necessary, but
+I did it just to be on the safe side.
 
 ## Ready
 If you installed Nim and tested the programs on the previous
@@ -87,8 +87,8 @@ Before trying to understand the program of listing @rpn,
 let us see how to use it. The program is an emulator of
 the famous hp calculators.
 
-In pre-algebra, students learn to place arithmetic operators
-such as (+, -, × and ÷) between their operands; e.g. 345+47.
+In pre-algebra, students learn to place arithmetic operators,
+such as (+, -, × and ÷), between their operands; e.g. 345+47.
 However, when doing sums and subtractions on paper, they
 stack the operands. 
 
@@ -175,12 +175,12 @@ endif
 
 ```
 
-A Makefile contains rules and recipes. A rule says how
+A Makefile contains rules and recipes. A rule states how
 to make or remake certain files that are called the
-rule's targets. Recipes are written in shell syntax
+rule targets. Recipes are written in shell syntax
 and used to call compilers and commands. In order to
-distinguish them from rules, one always indents recipes
-by tabs. If you are using the neovim editor, you can
+distinguish these from rules, one always indents recipes
+through use of tabs. If you are using the neovim editor, you can
 issue a tab by pressing Ctrl-v TAB. 
 
 A variable is an id defined in a makefile to represent
@@ -196,12 +196,12 @@ src> make -f Makefile APP=rpn
 
 In the above example, one has informed the name of the
 script to the make-tool through the `-f` directive,
-however this is not necessary if it is called *Makefile*
-or *makefile*.
+however this is not necessary if the script is
+called *Makefile* or *makefile*.
 
 When you call `make APP=rpn` from the command line, the
 `APP` variable receives the `rpn` value, which will be
-expanded in the recipe below:
+expanded into the recipe below:
 
 ```Makefile
 	nim c -o:$(APP).x -d:release --nimcache:lixo $(APP).nim
@@ -226,8 +226,8 @@ CL-USER> (draw-cons-tree::draw-tree (list 2 4 8 16))
 In the Lisp community, where the idea of linked list gained
 momentum, links have two parts, the `car` field contains the
 datum and the `cdr` field contains the address of the next
-link. In order to facilitate creating a connection of two
-links, listing @rpn defines the `a >> b` template, that
+link. In order to facilitate the creation of a sequence of
+links, listing @rpn defines the `a >> b` template, which
 assigns the `a` value to the `car` field, and the `b` address
 to the `cdr` field.
 
@@ -286,7 +286,7 @@ A macro rewrites a form from a Domain Specific Language
 that is convenient for solving a given problem into
 something that the compiler understands. In listing
 @firstmacro, before compilation even starts, the macro `rpt`
-will rewrite the macro form...
+will rewrite the macro form below \ldots
 
 ```Nim
 rpt j, paramStr(1).parseInt :
@@ -295,7 +295,7 @@ rpt j, paramStr(1).parseInt :
      echo "Now"
 ```
 
-...into the following stuff:
+...into the following:
 
 ```Nim
 for j in 1..paramStr(1):
@@ -313,20 +313,20 @@ for j in 1..paramStr(1):
 	echo "Now, Please."
 ```
 
-Only at this point, after the two macros finished their
-work, the compilation process will start. The `rpt` macro
+Only at this point, after the two macros have finished their
+work, will the compilation process start. The `rpt` macro
 inserts \verb|`ix`|, \verb|`count`| and \verb|`statements`|
 into a *for-pattern* introduced by the quote statement.
 
-The `magicWord` macro does not works by filling gaps
-in a pattern, as the `rpt` macro. The first step of
+The `magicWord` macro does not work by filling in gaps
+into a pattern, as the `rpt` macro. The first step of
 compilation transform your program into a branching
 data structure known as the *Abstract Syntax Tree*, or
 `AST` for short. The argument of the AST is a sequence
 of statements. The first loop of the `magicWord` macro
-goes through all statement. The second floor examines
+goes through all statements. The second `for`-loop examines
 all nodes of each statement. If there is a node of
-`nnkStrLit` kind, the macro concatenates `", Please"`
+the `nnkStrLit` kind, the macro concatenates `", Please"`
 to it.
 
 Here below is how the program works:
@@ -377,7 +377,7 @@ Professional programmers, such as the Argentinean Juan Carlos
 Paco, don't use a quote pattern to define a macro, they prefer
 to tinker with the `AST` tree data structure directly.
 Listing @AST-tinkering shows how to define a macro to iterate
-through a list of commands, that in the example contains only
+through a list of commands, which in the example contains only
 echo statements.
 
 ```
@@ -403,7 +403,7 @@ it into the `for_loop` variable. Finally, the
 macro creates a `stmList` (statement list) that
 will be repeated in the loop. The macro starts by
 inserting `stdout.write i` into the `stmList` var,
-then proceed to insert the remaining `stm` commands.
+then proceeds to insert the remaining `stm` commands.
 The last step is to insert `stmList` into the
 `for_loop` variable, and the `for_loop` variable
 into the `result`.
@@ -608,11 +608,11 @@ it in the rpn calculator of listing @calc, as you can check.
 
 # Anthropology of Money
 
-In order to build a computer that performs medical
-diagnosis, launch the Luna 3 to photograph the far
-side of the Moon, or even to apply to medical
-residency programs in 110 hospitals, you need three
-things: Money, training and collaboration. If I had
+In order to build a computer able to perform medical
+diagnoses, launch the Luna 3 to photograph the far
+side of the Moon, or even apply for medical residency
+programs in 110 hospitals, you need three things:
+Money, training and collaboration. If I had
 not obtained the collaboration of Vindaar and Juan
 Carlos Paco, I would not be able to write about
 Nim macros. If the members of the Della-Vos group
@@ -628,13 +628,13 @@ services: Medium of exchange, store of value and
 unit of account.
 
 To understand medium of exchange, let us perform a
-thought experiment. What would  the economy in a
-Brazilian indian tribe look like, if that tribe
-lived without any significant contact with modern
-global civilization? Let us give this tribe a
+thought experiment. What does the economy in an
+Indian tribe of Brazil look like, considering that
+the tribe has lived without any significant contact
+with modern global civilization? Let us give this tribe a
 name-- Awa, since I lived among the Awaians for
 almost three years and could observe their customs,
-and became friend of many members of the tribe.
+and became a friend to many members of the tribe.
 
 There are people among the Awaians that I will call
 croppers, because they work in agriculture: they plant
@@ -643,22 +643,22 @@ that raise poultry for the eggs. The artisans produce
 artifacts like bows, arrows, wicker baskets, hammocks,
 etc. A potter provides ceramic ware, and also cups
 carved from wood. The healer knows the secrets of
-manufacturing medicines and alkaloid arrow poisons.
-There are also the hunter-gatherers that obtain foods
+manufacturing medicines and alkaloids for arrow poisons.
+There are also the hunter-gatherers that obtain food
 and other goods by foraging, i.e., collecting plants
-in the forest and pursuing wild animals.
+from the forest and pursuing wild animals.
 
 A hunter-gatherer girl, my friend Jurema, uses
 a blowdart for capturing small animals and defending
 herself. Curare is a common name for various arrow
-poisons  that causes muscle weakness by competitively
+poisons  that cause muscle weakness by competitively
 inhibiting one of the acetylcholine receptors. Let us
 assume that Jurema needs this concoction for her
 blowdarts that she uses for defending herself against
 the illegal gold panners that often invade the Awaian
 territory in the eastern Amazon rainforest. She goes to
 the healer and barters a parrot chick that she captured
-in the woods for a small quantity of curare. If the
+in the forest for a small quantity of curare. If the
 healer needs a ceramic cauldron for preparing chemicals
 and herbs, he may go to the potter's tent and trade
 a quinine based malaria medication in exchange for the
@@ -689,7 +689,7 @@ healer needs so badly. It is also possible that Jurema
 will not be able to get the curare in exchange for the
 parrot chick: The healer may not like parrot chicks, or
 his daughter may already have five parrot chicks, and he
-does not want to humor her and add a sixth chicken to
+does not want to humor her and add a sixth chick to
 her collection.
 
 The problem with a barter economy is that the buyer
@@ -705,7 +705,7 @@ healer, which is better known as a debt of gratitude.
 How does one pay a debt of gratitude? In this case, in
 the future, when the healer needs feathers for ceremonial
 dress in a ritual, he can order Jurema to collect feathers
-of color and type he needs during her next forage in the
+of the colors and type he needs during her next forage in the
 forest. On the other hand, the healer would receive the
 cauldron from the potter without immediate payment. When
 the potter needs a mosquito repellent from the healer,
@@ -718,7 +718,7 @@ consists of few individuals. Awaians can remember the
 persons to whom they owe favors, and who owes favors to
 them. If a society becomes large, it is difficult for a
 seller to track the many people who have debts of gratitude
-to pay. It is also difficult to decide what could be consider
+to pay. It is also difficult to decide what could be considered
 as equal payment between debts of gratitude. How many times
 does the healer need to provide medicine for a cauldron?
 Is a repellent for mosquitoes equivalent to a bottle of
@@ -733,6 +733,8 @@ the person to whom he provided a service. In such an organization,
 a Mayan healer could take the cocoa beans that he received from
 the hunter-gatherer girl and use them to pay the potter for
 the cauldron.
+
+[//]: end of the proofreading 29/10/2019
 
 Cocoa beans as a medium of exchange also have a problem: It is
 very easy to cheat the system. For instance, a Mayan crook
