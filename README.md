@@ -49,5 +49,5 @@ pandoc -V geometry:margin=1in -V documentclass=report\
 ## Nim Language
 The Nim programming language has a syntax that is similar to the one you will find in Python. The main difference between Nim and Python is that Nim generates fast code with small runtime and heap consumption.
 
-Macro is a tool that you can use for tayloring the language for the application. If the language enriched with macros can model well the problem, the developer will find a solution without errors in less time.
+Macro is a tool that you can use for tailoring the language for the application. If the language enriched with macros can model well the problem, the developer will find a solution without errors in less time.
 
