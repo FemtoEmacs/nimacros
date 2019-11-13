@@ -16,6 +16,7 @@ header-includes:
    \usepackage{upquote} 
    \usepackage{wrapfig}
    \usepackage{graphicx}
+   \usepackage{amsmath}
 comment:
   pandoc -s nimdoc.md --syntax-definition nimrod.xml -o nimdoc.pdf
 abstract:

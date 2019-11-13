@@ -6,7 +6,7 @@ abort:
 endif
 
 all:
-	nim c -o:$(APP).x -d:danger --hints:off --nimcache:lixo $(APP).nim
+	nim c -o:$(APP).x -d:danger --hints:off --nimcache:xx $(APP).nim
 
 ifeq ($(APP),)
 clean:

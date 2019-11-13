@@ -15,9 +15,8 @@ page of Wittgenstein's Tratactus Logico-Philosophicus,
 which has a title in Latin, but is written in German.
 Here is the first line of the Tratactus:
 
-> 1. Die Welt ist alles, was der Fall ist.
-> 1.1 Die Welt ist die Gesamtheit der Tatsachen,
-> nicht der Dinge.
+1. Die Welt ist alles, was der Fall ist.
+   - 1.1. Die Welt ist die Gesamtheit der Tatsachen, nicht der Dinge.
 
 On the first line, an English speaker can recognize a
 lot of words, for instance, *Welt* must mean *World*,
@@ -135,7 +134,7 @@ of Cleopatra and Julius Cæsar, designed the Julian calendar,
 where January and February, the two deep winter months, appear
 in  positions 1 and 2 respectively. Therefore, a need for a
 formula that converts from the modern month numbering to the
-old sequence has arisen. In listing @zeler, this is done
+old sequence has arisen. In listing @zeller, this is done
 by the following algorithm:
 
 ```Nim
@@ -162,7 +161,7 @@ months. By the way, `wm` stands for *winter months*. Since
 January is month 1, and February is month 2 in the Gregorian
 calendar, `wm` is equal to 1 for these two winter months. In the
 case of January, the state is given by: `m=1`, `wm=1`, `result=11`.
-For February, the state becomes `m=2`, `wm=1`, `result=10`.
+For February, the state becomes `m=2`, `wm=1`, `result=12`.
 
 
 The program of the listing @zeller calculates the day of the week
@@ -221,13 +220,12 @@ sequence of statements to generate a succession of steps
 that will approach an end state or value. This repetition
 process is called iteration after the Latin word for path.
 
-Leonardo Pisano Bigollo, a.k.a. Fibonacci, was speculating
-on how fast the reproduction of immortal rabbits would be.
-This breeding of rabbits has the interesting properties of
-mating at the age of one month, thus, at the end of her
-second month, the female produces a new pair of rabbits, a
-male and a female. Then she keeps producing two babies a
-month for all eternity.
+Leonardo Bigollo Pisano, a.k.a. Fibonacci, was speculating
+on how fast the reproduction of rabbits would be. His breeding
+of rabbits has the interesting properties of mating at the
+age of one month, thus, at the end of her second month, the
+female produces a new pair of rabbits, a male and a female.
+Then she keeps producing two babies a month for one year.
 
 Fibonacci concluded that the number A~n~ of adult pairs
 in a given month is equal to the total number R~n-1~
@@ -241,10 +239,11 @@ is adults plus babies, in any given month is the sum of the
 pairs from the previous two months.
 
 ```Nim
+# File: iterfib.nim
 import os, strutils
 
 proc fib(n: int): int =
-  var (r1, r2) = (1, 1)
+  var (r1, r2) = (2, 1)
   for i in 2..n:
     (r1, r2) = (r1+r2, r1)
   result= r1
@@ -260,7 +259,7 @@ compiled and executed:
 ```
 › nim c --nimcache:xx -o:rabbits.x -d:release --hints:off iterfib.nim
 › ./rabbits.x 5
-8
+13
 ```
 
 ## Recursion
@@ -272,11 +271,11 @@ of pairs in the present generation over the previous generation.
 Here is a program that uses this idea:
 
 ```Nim
+#› nim c --nimcache:xx -o:recfib.x -d:danger --hints:off recfib.nim
 import os, strutils
-
 proc fib(n: int): int =
-  if n<2: result=1
-  elif n<3: result=n
+  if n<2: result= n+1
+  elif n<3: result= fib(n-1)+fib(n-2)
   else: result= fib(n-3)+fib(n-2)+fib(n-2)
 
 echo fib(paramStr(1).parseInt)
@@ -284,11 +283,10 @@ echo fib(paramStr(1).parseInt)
 
 (@recfib) Recursive Fibonacci function
 
-The program of listing @recfib has many novelties. The first
-one is the conditional execution of a sequence of statements.
-For instance, `result=1` sets `result` to 1, but only if the
-condition `n<2` is met. On the same token, `result=n` sets
-`result` to `n`, if `n<3`.
+The program of listing @recfib has many novelties. The first one is
+the conditional execution of a sequence of statements. For instance, `result=n+1` sets `result` to `n+1`, but only if the condition `n<2`
+is met. On the same token, `result=fib(n-1)+fib(n-2)` sets `result`
+to `fib(n-1)+fib(n-2)`, if `n<3`.
 
 However, the strangest feature of listing @recfib, is the
 use of the `fib` function in the definition of `fib`. In
@@ -296,31 +294,30 @@ other words, the definition of `fib` calls itself. When such
 a thing happens, computer scientists say that the definition
 is recursive.
 
-
 Typically a recursive definition has two kinds of conditions,
 which in Nim are introduced by the if-statement:
 
 - Trivial conditions, which can be resolved using primitive operations.
 - General conditions, which can be broken down into simpler cases.
 
-In listing @recfib, the trivial conditions are --
+In listing @recfib, the trivial condition is --
 
-+ `if n<2: result=1`
-+ `if n<3: result=n` 
++ `if n<2: result=n+1`
 
-The general condition is introduced by the `else` clause for
-rewriting the expression `fib(n)` into the following expression:
+The general conditions are introduced by the `elif` and `else`
+clauses for rewriting the expression `fib(n)` into one of
+the following expressions:
 
 ```Nim
+elif n<3: result= fib(n-1)+fib(n-2)
 else: result= fib(n-3)+fib(n-2)+fib(n-2)
 ```
 
-where each occurrence of a call to `fib` is closer to the trivial
+Where each occurrence of a call to `fib` is closer to the trivial
 case than `fib(n)`, which was the original call.
 
 The mathematician Peano invented a very interesting axiomatic
-theory for natural numbers. I cannot remember the details,
-but the idea was something like the following:
+theory for natural numbers, that can be summarized thus:
 
 1. Zero is a natural number.
 2. Every natural number has a successor: The successor of 0 is 1, the
@@ -329,6 +326,117 @@ successor of 1 is 2, the successor of 2 is 3, and so on.
 
 Did you get the idea? For this very idea can be applied to many other
 situations, even in programming a computer.
+
+Since Luciano Lima and Roger Alan think that it is very important
+to reproduce Peano's theory in the Latin original, I decided to 
+meet their demands. However, in Peano's Arithmetices Principia:
+Nova Methodo Exposita, quae ediderunt Fratres Bocca in anno 1889,
+there are a typos in axioms 3 and 4, that I fixed.
+
+Sergio Teixeira and Stephanie Bourdieu also said that my
+implementation of the Fibonacci procedure was not faithful to
+the 1228 edition of the Liber Abaci. I changed the algorithms
+as recommended by Stephanie, and also reproduced the fable of
+the 377 rabbits that appear in chapter 12 of Fibonacci's book. 
+
+Readers who do not know Latin, or are not interested in Fibonacci
+and Peano, can skip the rest of this chapter without any loss of
+important information.
+
+
+#### Liber Abaci -- Capitulum XII: Fabula Cuniculorim {-#Liber}
+
+Quot paria coniculorum in uno anno ex uno pario germinentur?
+
+Quidam posuit unum par cuniculorum in quodam loco, qui erat
+undique pariete circundatus, ut sciret, quot ex eo paria
+germinarentur in uno anno: cum natura eorum sit per singulum
+mensem aliud par germinare; et in secundo mense ab eorum
+nativitate germinant.
+
+Quia suprascriptum par in primo mense germinat, duplicabis ipsum,
+erunt paria duo in uno mense. Ex quibus unum, silicet primum,
+in secundo mense geminat; et sic sunt in secundo mense paria 3;
+ex quibus in uno mense duo pregnantur; et geminantur in tercio
+mense paria 2 coniculorum; et sic sunt paria 5 in ipso mense;
+ex quibus in ipso pregnantur paria 3; et sunt in quarto mense
+paria 8; ex quibus paria 5 geminant alia paria 5: quibus additis
+cum pariis 8, faciunt paria 13 in quinto mense; ex quibus paria 5,
+que geminata fuerunt in ipso mense, non concipiunt in ipso mense,
+sed alia 8 paria pregnantur; et sic sunt in sexto mense paria 21;
+cum quibus additis parijs 13, que geminantur in septimo, erunt in
+ipso paria 34, cum quibus additis parijs 21, que geminantur in
+octavo mense, erunt in ipso paria 55; cum quibus additis parijs 34,
+que geminantur in nono mense, erunt in ipso paria 89; cum quibus
+additis rursum parijs 55, que geminantur in decimo, erunt in ipso
+paria 144; cum quibus additis rursum parijs 89, que geminantur in
+undecimo mense, erunt in ipso paria 233. Cum quibus etiam additis
+parijs 144, que geminantur in ultimo mense, erunt paria 377,
+et tot paria peperit suprascriptum par in prefato loco in capite
+unius anni. Potes enim videre in hac margine, qualiter hoc operati
+fuimus, scilicet quod iunximus primum numerum cum secundo,
+videlicet 1 cum 2; et secundum cum tercio; et tercium cum quarto;
+et quartum cum quinto, et sic deinceps, donec iunximus decimum
+cum undecimo, videlicet 144 cum 233; et habuimus suprascriptorum
+cuniculorum summam, videlicet 377; et sic posses facere per ordinem
+de infinitis numeris mensibus.
+
+The farmer of Fibonacci's fable starts with a pair of addult
+rabbits. Therefore, at the end of month 1, there were two pairs
+of rabbits. In the instant zero of the experiment there was
+only the original pair. Therefore, in listing @recfib, one has
+the following clause for `n<2`:
+
+```Nim
+  if n<2: result= n+1
+```
+
+Since in the most general clause Stephanie needed three
+generations of rabbits, she added a clause for the second
+month, to wit:
+
+```Nim
+  elif n<3: result= fib(n-1)+fib(n-2)
+```
+
+From the second month onward Stephanie can use the most
+general clause:
+
+```Nim
+  else: result= fib(n-3)+fib(n-2)+fib(n-2)
+```
+
+In general, recursive calculation of Fibonacci's function
+is very inefficient, and is often used in benchmarks.
+However, good compilers succeed to optimize the recursion
+away, therefore the algorithm given by listing @recfib is
+very fast.
+
+
+#### De numeris et de additione {-#De}
+
+Explicationes.
+
+Signo N significatur numerus (integer positivus).
+
+-  1     unitas.
+-  a+1   sequens a, sive a plus 1.
+-  =     Hoc ut novum signum considerandum est,
+         etsi logicae signi figuram habeat.
+
+### Axiomata {-#Axiomato}
+1. $1 \in N$
+2. $a \in N\cdotp\!\supset\cdotp a=a$
+3. $a,b \in N\cdotp\!\supset:a=b\;\cdotp\!=\cdotp\;b=a$ 
+4. $a,b,c \in N\cdotp\!\supset\therefore a=b\cdotp
+       b=c:\supset\cdotp a=c$ 
+5. $a=b\cdotp b\in N:\supset\cdotp a\in N$
+6. $a \in N\cdotp\!\supset\cdotp a+1 \in N$
+7. $a,b \in N\cdotp\!\supset:a=b\;\cdotp\!=\cdotp\;a+1=b+1$
+8. $a \in N\cdotp\!\supset\cdotp a+1-=1$
+9. $k\in K\therefore 1\in k\therefore
+         x\in N\cdotp x\in k:\supset_x\cdotp x+1\in k::
+         \supset\cdotp N\supset k$ 
 
 # Shell
 
@@ -531,7 +639,7 @@ string or the file name, as necessity dictates.
 ~/wrk$ echo 'import os, strutils\n' > ifib.nim
 ~/wrk$ {
 cursh> echo 'proc fib(n: int): int ='
-cursh> echo '   var (r1, r2) = (1, 1)'
+cursh> echo '   var (r1, r2) = (2, 1)'
 cursh> } >> ifib.nim
 ~/mwrk$ ls
 hi.nim ifib.nim
@@ -539,7 +647,7 @@ hi.nim ifib.nim
 import os, strutils
 
 proc fib(n: int): int =
-   var (r1, r2) = (1, 1)
+   var (r1, r2) = (2, 1)
 ```
 
 The above example shows that you can use braces to create
@@ -558,7 +666,7 @@ show that it can be done.
 ~/wrk$ echo 'import os, strutils\n' > ifib.nim
 ~/wrk$ {
 cursh> echo 'proc fib(n: int): int ='
-cursh> echo '   var (r1, r2) = (1, 1)'
+cursh> echo '   var (r1, r2) = (2, 1)'
 cursh> } >> ifib.nim
 ~/wrk$ ls
 hi.nim   ifib.nim
@@ -573,7 +681,7 @@ heredoc> EOT
 import os, strutils
 
 proc fib(n: int): int =
-   var (r1, r2) = (1, 1)
+   var (r1, r2) = (2, 1)
    for i in 2..n:
       (r1, r2) = (r1+r2, r1)
    result= r1
@@ -584,12 +692,12 @@ echo fib(paramStr(1).parseInt)
 ### ls {-#ls} 
 By convention, a file name has two parts, the *id* and the
 *extension*. The id is separated from the extension by a dot.
-The `ls` command lists all files and subfolders present in
+The `ls` command lists all files and sub-folders present in
 the current folder. The `ls *.nim` prints only files with
 the `.txt` extension.
 
 The `*.nim` pattern is called wild card. In a
-wild card, the `*` asterix matches any sequence of chars,
+wild card, the `*` asterisk matches any sequence of chars,
 while the `?` interrogation mark matches a single char.
 The command `ls -lia *.nim` prints detailed information
 about the `.nim` files, like date of creation, size, etc.
@@ -762,8 +870,6 @@ hi.nim hi.x   xx
 source/tests$ rm -rf xx
 ```
 
-[//1]: end1 of the proofreading 05/11/2019
-
 # Emacs / lem
 
 You can create source files by using the `cat` command.
@@ -773,35 +879,35 @@ Lisp programming language. I will not try to explain how
 to install lem, since the procedure changes over time and
 from machine to machine. Therefore, search the web for
 adequate binaries and instruction on how to install the
-thing in your computer.
+thing on your computer.
 
-In the below cheat sheet for lem, `C-` is the `Ctrl` key, `M-`
+In the following cheat sheet for lem, `C-` is the `Ctrl` key, `M-`
 denotes the `Alt` key, $\kappa$ can be any key, and `Spc`
 represents the space bar. Thus, `C-`$\kappa$ means: Press and
 release the `Ctrl` key and the $\kappa$ key simultaneously.
 
-+ `C-s` -- search a string of text. Press `C-s`, then type text
-you  want to find.
++ `C-s` -- search for a string of text. Press `C-s`, then type in
+the text you  want to find
 + `C-s` again -- After the first occurrence, press `C-s` again 
-to find other instances.
-+ C-r -- reverse search. 
-+ `C-k` -- kill the text from the cursor until the end of the line
+to find other text instances
++ C-r -- reverse search 
++ `C-k` -- kill the text from the cursor, until the end of the line
 + `C-h` -- backspace: erase the char before the cursor and move backwards
 + `C-d` -- delete char under the cursor 
-+ `C-Spc` then move the cursor -- select a region.
-+ `M-w` -- save selected region into the kill ring.
++ `C-Spc` then move the cursor -- select a region
++ `M-w` -- save selected region in the kill ring
 + `C-w` -- kill region, but save its contents in the kill ring
-+ `C-y` -- insert killed/saved region at the cursor
-+ `C-g` -- cancel minibuffer reading.
-+ `C-a` -- go to beginning of line.
-+ `C-e` -- go to end of line.
-+ `C-/` -- undo.
-+ `INS` -- toggle overwrite mode.
-+ `C-b` -- move backward one character.
-+ `C-f` -- move forward one character.
-+ `C-n` -- move cursor to the next line.
-+ `C-p` -- move cursor to the previous line.
-+ ←↑↓→ -- the arrow keys also move the cursor.
++ `C-y` -- insert killed/saved region at current cursor position
++ `C-g` -- cancel minibuffer reading
++ `C-a` -- go to beginning of line
++ `C-e` -- go to end of line
++ `C-/` -- undo
++ `INS` -- toggle overwrite mode
++ `C-b` -- move back one character
++ `C-f` -- move forward one character
++ `C-n` -- move cursor to the next line
++ `C-p` -- move cursor to the previous line
++ ←↑↓→ -- the arrow keys also move the cursor
 
 ### Ctrl-x commands {-#Ctrl-x}
 
@@ -816,14 +922,14 @@ and `κ`, one after the other.
 
 + `C-x C-f` -- open a file into a new buffer
 + `C-x C-w` -- write file with new name
-+ `C-x C-s` -- save the current file.
-+ `C-x C-c` -- exit lem
-+ `C-x C-i` -- insert file at the cursor
++ `C-x C-s` -- save the current file
++ `C-x C-c` -- exit the lem source editor
++ `C-x C-i` -- insert file at current cursor position
 
 The `C-x ?` command --  describes a key stroke. Press
 the `Ctrl` key and the `x` key at the same time, release
 both keys, then press the `?` question mark. The one-line
-buffer at the bottom of the page is called minibuffer.
+buffer at the bottom of the page is called the minibuffer.
 The command `C-x C-f` that finds a file reads the name of
 the file from the minibuffer. This time, the minibuffer will
 prompt you with the `describe-key` invitation. If you type
@@ -837,21 +943,23 @@ Release both keys, then press the `@` key. The
 lem editor will prompt for a shell command. Type
 `ls`, for instance. It will open a temporary buffer
 and show a list of file names.  There are many commands
-that reads information from the minibuffer:
+that read information from the minibuffer:
 
-+ `C-x C-f` -- gets the file you want to open from the minibuffer
-+ `C-x C-s` -- reads the text you will search from the minibuffer
-+ `C-x C-i` -- you type the file name you want on the minibuffer
++ `C-x C-f` -- retrieves the file you want to open from the minibuffer
++ `C-x C-s` -- reads the text sample you search for from the minibuffer
++ `C-x C-i` -- in the minibuffer, type a file name to insert at current
+               cursor position
+
 
 You must type `C-g`, whenever you want to cancel any
 command that needs to read a complement from the minibuffer.
 
 ### Window commands {-#Window}
 
-One can have more than one window on the screen. Below, you will
-find commands that cope with this situation. In commands of the
-form `C-x κ` -- keep the `Ctrl` key down and press `x`, then
-release both keys and hit the `κ` key. 
+One can have more than one window on the screen at any given moment.
+In the list below, you will find commands that deal with this situation.
+In commands of the form `C-x κ` -- keep the `Ctrl` key down and
+press `x`, then release both keys and hit the `κ` key. 
 
 + `C-x b` -- next buffer 
 + `C-x C-b` -- list buffers available
@@ -861,7 +969,7 @@ release both keys and hit the `κ` key.
 + `C-x 1` -- close the other window
 + `C-x 0` -- close the cursor window
 
-You can have many files opened at the same time. I mean, when
+You can maintain many files open at the same time. I mean, when
 you open a new file with the `C-x C-f` command, the buffer on
 which you were working is not discarded, but remains in the
 background. When you type `C-x b`, lem takes the cursor to the
@@ -869,14 +977,15 @@ minibuffer, where you can use the arrow keys to scroll and choose
 the next buffer you want to edit. If you press `C-x C-b`, lem
 provides a list of all buffers available, so you can choose one.
 In this case, issue a `C-x o` command so that the cursor switches
-to the buffer list window and you can choose the destination buffer.
+to the buffer list window, from where you can choose the destination
+buffer.
 
 ![](figs-prefix/minibuffer.jpg "Minibuffer"){width=250px}
 
 (@minibuffer) Fibonacci Function
 
-The above figure shows the editor. On the minibuffer you can
-read the following message that was left there as the aftermath
+The figure above shows the editor. On the minibuffer you can
+read the following message that was left there as the byproduct
 of a `C-x C-s` save file command: 
 
 > `Wrote /Users/ed/work/fib.nim`
@@ -898,16 +1007,16 @@ the program, as shown below.
 ```bash
 ~/work$ nim c -o:fib.x -d:release --nimcache:xx --hints:off fib.nim
 ~/work$ ./fib.x 5
-8
+13
 ```
 
 
 ### Meta keys {-#Meta}
 
-To issue commands in the `M-κ`form, keep the `Alt` key
+To issue commands in the `M-κ` form, keep the `Alt` key
 down and press the `κ` key.
 
-+ `M-b` -- move backward one word
++ `M-b` -- move back one word
 + `M-f` -- move forward one word
 + `M-g` -- go to the line given on the minibuffer
 + `M->` -- go to the end of buffer
@@ -917,7 +1026,7 @@ It is pretty hard to press the `M-<` command. You must
 keep the `Alt` key down, then press the `Shft` and `<`
 keys together. However, there is a `~/.lem/init.el`
 initialization file where one can define new commands.
-Add the following commands to the `~/.lem/init.el` file:
+So, let's add the following commands to the `~/.lem/init.el` file:
 
 ```Lisp
 ;; -*- lisp -*-
@@ -931,24 +1040,24 @@ Add the following commands to the `~/.lem/init.el` file:
 (define-key *global-keymap* "M-n" 'move-to-end-of-buffer)
 ```
 Now, next time you enter lem, if you press `M-p`, you
-will go to the beginner of the buffer. Likewise, if
+will go to the beginning of the buffer. Likewise, if
 you press `M-n`, the cursor will be sent to the end
-of the file.
+of the buffer.
 
 ### Search {-#Search}
-If you press `C-s`, the computer enters in the search
+If you press `C-s`, the computer enters into search
 mode. First, lem prompts you for the text snippet S
 that you want it to find in the current buffer. While
 you are still typing, the cursor jumps to the first
 occurrence of the text snippet S. To repeat the search,
-all you need to to is press `C-s` again. Finally, you
+all you need to do is press `C-s` again. Finally, you
 must type `C-r` to reverse the direction of the search.
 
 
 ### Go to line {-#Go}
 When you try to compile code containing errors, the compiler
 usually reports the line number where the error occurred.
-If you press 'M-g`, lem prompts for a line number. As soon
+If you press `M-g`, lem prompts for a line number. As soon
 as you type the number and press the `Enter` key, the cursor
 jumps to the line where the error occurred.
 
@@ -956,7 +1065,7 @@ jumps to the line where the error occurred.
 ### Transport and Copy {-#Transport}
 To transport a region from one place to another, Nia
 presses `C-Spc` to start the selection process and 
-ove the cursor to select the region. Then she presses
+moves the cursor to select the region. Then she presses
 `C-w` to kill her selection. Finally, she moves the
 cursor to the insertion place, and presses the `C-y`
 shortcut.

@@ -734,16 +734,14 @@ a Mayan healer could take the cocoa beans that he received from
 the hunter-gatherer girl and use them to pay the potter for
 the cauldron.
 
-[//]: end of the proofreading 29/10/2019
-
 Cocoa beans as a medium of exchange also have a problem: It is
 very easy to cheat the system. For instance, a Mayan crook
 could find a cocoa tree, harvest a lot of cocoa beans, and
 tell the potter, the healer or the hunter-gather girl that
 they owe him that many favors. To avoid this kind of dishonest
-behavior, most civilization replaced simple tokens such as
-cocoa beans with something harder to falsify, such as coins
-of gold, silver and other rare metals.
+behavior, most civilizations replaced simple tokens, such as
+cocoa beans, with something harder to falsify, the likes of
+coins made of gold, silver and other rare metals.
 
 Of course, falsifications continued even after the introduction
 of metal coins. People minted coins of tin, and gold plated them.
@@ -767,24 +765,23 @@ of the subject in this book, get in touch with the authors and ask
 for a chapter on the subject.
 
 For the reasons stated above, gold and silver coins were replaced
-by banknotes. In order to defeatforgery, tampering and counterfeiting,
-manufacturers of banknotes introduced many technological security
-measures, such as special types of paper, micro printing, intaglio
-printing, watermarks, guilloché, holograms, security threads,
-magnetic ink, etc. One of the most famous security printers, who
-helped in the creation of these technologies, was Thomas de la
-Rue (1793 -- 1866), who founded the De La Rue plc, which today sells
-high-security paper and printing technology for over 150 national
-currencies.
+by banknotes. In order to counteract forgery, tampering and counterfeiting, manufacturers of banknotes introduced many
+technological security measures, such as special types of paper,
+micro printing, intaglio printing, watermarks, guilloché, holograms,
+security threads, magnetic ink, etc. One of the most famous experts
+in security printing, who helped in the creation of these technologies,
+was Thomas de la Rue (1793 -- 1866). He founded the De La Rue plc,
+which today sells high-security paper and printing technology for
+over 150 national currencies.
 
 The function of  banknotes, which a citizen holds in his or her
-possession, is to remind the society that its members owe a certain
+possession, is to remind society that its members owe a certain
 value of services and goods to that particular citizen. It was
 introduced when the number of citizens became so large that a person,
 like the Awaian girl, could not remember who should pay her a debt
 of gratitude. The advent of computers permitted the storing of
-commercial transaction records in a data base. The buyer and seller
-can access the data base through a smart card personalized to the
+commercial transaction records in a database. The buyer and seller
+can access the database through a smart card personalized to the
 buyer. This new technology is known as digital currency.
 
 It is easy to forecast the type of technology that the future
@@ -792,6 +789,7 @@ holds for money: The seller and the banking system will not need
 the smart card, in order to identify the buyer, since they can
 easily be identified through their DNA.
 
+[//1]: Stopped here 12/11/2019
 
 # A syntax changing macro
 
