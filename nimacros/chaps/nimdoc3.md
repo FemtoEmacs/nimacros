@@ -148,63 +148,62 @@ src> ./rpn.x 3 25320 x  6 56750 x + 3 136000 x +
 824460.0
 ```
 
-## Makefile
-Up to this point, you have used the command line
-to call the Nim compiler. A better approach to
-manage compilation is to create a Makefile as the
-one shown below.
+## Nimscript
+Up to this point, you have used the command line to call the Nim
+compiler. A better approach to manage compilation is to create
+a nimscript as the one suggested by SolitudeSF and RSDuck.
 
-```Makefile
-APP=
+```Nim
+#!/usr/bin/env -S nim --hints:off
+mode = ScriptMode.Silent
+from os import `/`
+if paramCount() > 3 and fileExists(paramStr(3) & ".nim"): 
+  let
+    app = paramStr(3)
+    src = app & ".nim"
+    exe = app & ".x"
+    c = "nim c --hints:off --nimcache:xx -d:danger -o:"
 
-ifeq ($(APP),)
-abort:
-	@echo Usage: make APP=sourceFile
-endif
-
-all:
-	nim c -o:$(APP).x -d:release --hints:off --nimcache:lixo $(APP).nim
-
-ifeq ($(APP),)
-clean:
-	@echo Usage: make clean APP=file without extension
-else
-clean:
-	rm -rf $(APP).x lixo
-endif
-
+  exec c & exe & " " & src
+  echo c & exe & " " & src
+  mvFile exe, "bin" / exe
+else: echo "Usage: ./build.nims <app without extension>"
 ```
+(@build) A Nimscript for building small applications
 
-A Makefile contains rules and recipes. A rule states how
-to make or remake certain files that are called the
-rule targets. Recipes are written in shell syntax
-and used to call compilers and commands. In order to
-distinguish these from rules, one always indents recipes
-through use of tabs. If you are using the neovim editor, you can
-issue a tab by pressing Ctrl-v TAB. 
+A nimscript contains rules for building programs and managing
+files. The rules state how to make or remake certain files
+that are called the rule targets. A variable in nimscript has
+the same meaning as in Nim, therefore variables are ids defined
+in a script to represent a string of text, called value. When
+you call a script, for instance `./build.nims rpn`, to build a
+program, you can specify the value of the `app` variable through
+`paramStr(3)`.
 
-A variable is an id defined in a makefile to represent
-a string of text, called value. When you call `make` to
-build a program, you can specify the values of each
-variable. For instance, the command below executes the
-Makefile of the previous page and compiles the `rpn.nim`
+In the script of listing @build, the variables `src`, `exe`
+and `c`  contain parts of the command line that will be passed
+to `exec` and build the application. The first line of the script,
+which is prefixed by `#!` (she bang), will call the `nim` compiler
+to execute the script. Thus, the command below executes the
+`build.nims` of the previous page and compiles the `rpn.nim`
 program.
 
-```
-src> make -f Makefile APP=rpn
+```shell
+src› chmod a+x build.nims
+src› ./build.nims rpn
+CC: rpn.nim
+src> 
 ```
 
-In the above example, one has informed the name of the
-script to the make-tool through the `-f` directive,
-however this is not necessary if the script is
-called *Makefile* or *makefile*.
+In the above example, the `chmod` command will give permission
+to execute the script.
 
-When you call `make APP=rpn` from the command line, the
-`APP` variable receives the `rpn` value, which will be
+When you call `./build.nims rpn` from the command line, the
+`app` variable receives the `rpn` value, which will be
 expanded into the recipe below:
 
-```Makefile
-	nim c -o:$(APP).x -d:release --nimcache:lixo $(APP).nim
+```Nim
+exec nim c --hints:off --nimcache:xx -d:danger -o:rpn.x rpn.nim
 ```
 
 The result of the expansion will compile the `rpn.nim` program,
@@ -248,7 +247,7 @@ to the `stk` var, in the `eval(paramStr(i), stk)` call.
 # Macros
 
 ```Nim
-# make APP=quoteLoop
+# ./build.nims quoteLoop
 import macros, strutils, os
 
 macro magicWord(statments: untyped): untyped =
@@ -327,17 +326,16 @@ of statements. The first loop of the `magicWord` macro
 goes through all statements. The second `for`-loop examines
 all nodes of each statement. If there is a node of
 the `nnkStrLit` kind, the macro concatenates `", Please"`
-to it.
+to it.  Here below is how the program works:
 
-Here below is how the program works:
+```shell
+~/nim/nimacros/src master ×
+› ./build.nims quoteLoop
+CC: quoteLoop.nim
+nim c --hints:off --nimcache:xx -d:danger -o:quoteLoop.x quoteLoop.nim
 
-```
-~/nim/tutorial/src
-› make APP=quoteLoop
-nim c -o:quoteLoop.x -d:danger --hints:off quoteLoop.nim
-
-~/nim/tutorial/src
-› ./quoteLoop.x 2
+~/nim/nimacros/src master ×
+› bin/quoteLoop.x 2
 1- Give me some beer, Please.
 Now, Please.
 2- Give me some beer, Please.
@@ -346,7 +344,7 @@ Now, Please.
 
 ## Dealing with the `AST` directly
 ```Nim
-# make APP=rep
+# ./build.nims rep
 # Based on a model by Juan Carlos Paco
 import macros
 
@@ -381,13 +379,13 @@ through a list of commands, which in the example contains only
 echo statements.
 
 ```
-› make APP=quoteLoop
+› ./build.nims quoteLoop
 nim c -o:quoteLoop.x -d:danger --hints:off --nimcache:lixo quoteLoop.nim
 CC: stdlib_io.nim
 CC: stdlib_system.nim
 
 ~/nim/tutorial/src
-› ./quoteLoop.x 3
+› bin/quoteLoop.x 3
 1- Give me some beer, Please.
 2- Give me some beer, Please.
 3- Give me some beer, Please.
@@ -540,11 +538,11 @@ calculator of listing @calc to check these amounts:
 
 ```
 ~/nim/tutorial/src
-› make APP=rdwrt
+› ./build.nims rdwrt
 nim c -o:rdwrt.x -d:danger --hints:off --nimcache:lixo rdwrt.nim
 
 ~/nim/tutorial/src
-› ./rdwrt.x
+› bin/rdwrt.x
 > 2.5 100 /
 0.025
 > 1 +
@@ -1036,11 +1034,11 @@ macro cnt(cmd: untyped, stmts: untyped): untyped =
 cnt j paramStr(1).parseInt:
     echo j, "- Give me some beer"
 
-#[ › make APP=counter
+#[ › ./build.nim scounter
    nim c -o:counter.x -d:danger --hints:off --nimcache:lixo counter.nim
    for j in 1 .. paramStr(1).parseInt:
        echo j, "- Give me some beer"
-   › ./counter.x 2
+   › bin/counter.x 2
    1- Give me some beer
    2- Give me some beer
 ]#
@@ -1124,7 +1122,7 @@ practicing in the last three days.
 # Tree constructors
 
 ```Nim
-# make APP=akavelIter
+# ./build.nims akavelIter
 import macros, strutils, os
 
 macro iter(cmd: untyped, stmts: untyped): untyped =
@@ -1146,11 +1144,11 @@ Here is an example of running iter:
 
 ```
 ~/nim/nimacros/src master ×
-› make APP=akavelIter
+› ./build.nims akavelIter
 nim c -o:akavelIter.x -d:danger --hints:off akavelIter.nim
 
 ~/nim/nimacros/src master ×
-› ./akavelIter.x 5
+› bin/akavelIter.x 5
 3- Give me some beer
 4- Give me some beer
 5- Give me some beer
@@ -1193,7 +1191,7 @@ between listings @akavelIter and @akavelLoop is restricted
 to the syntax of the part that comes before the colon.
 
 ```
-# make APP=akavelLoop
+# ./build.nims akavelLoop
 import macros, strutils, os
 
 macro iter(cmd: untyped, sts: untyped): untyped =
@@ -1321,11 +1319,11 @@ you can see how to use the program of listing @units.
 
 ```
 ~/nim/tutorial/src
-› make APP=units
+› ./build.nims units
 nim c -o:units.x -d:danger --hints:off --nimcache:lixo units.nim
 
 ~/nim/tutorial/src
-› ./units.x
+› bin/units.x
 > 82 mi km
 131.938km
 > q
@@ -1356,7 +1354,7 @@ throne somewhere near the star Kolob.
 
 \pagebreak
 ```Nim
-# make APP=units
+# ./build.nims units
 import os, strutils
 
 type
