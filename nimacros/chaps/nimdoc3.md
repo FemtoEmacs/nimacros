@@ -157,7 +157,7 @@ a nimscript as the one suggested by SolitudeSF and RSDuck.
 #!/usr/bin/env -S nim --hints:off
 mode = ScriptMode.Silent
 from os import `/`
-if paramCount() > 3 and fileExists(paramStr(3) & ".nim"): 
+if paramCount() > 2 and fileExists(paramStr(3) & ".nim"): 
   let
     app = paramStr(3)
     src = app & ".nim"
