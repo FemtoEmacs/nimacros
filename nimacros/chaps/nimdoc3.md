@@ -244,6 +244,185 @@ In the `eval(x: string, s:var LL)` procedure, `s` is declared
 as `var`, which means that it can destructively assign values
 to the `stk` var, in the `eval(paramStr(i), stk)` call.
 
+# Web pages
+
+In this chapter, you will learn how to write a web application in
+pure femtolisp. But firstly,let us learn what cloud computing is.
+
+Cloud computing is an Internet based computer that provides shared
+processing  on demand for those people connected to a service provider.
+When a  company adheres to cloud computing, it avoids infrastructure
+costs, such as purchasing servers, and keeping them in working order.
+
+
+At the time of this writing, fees for a cloud computing can be pretty
+steep. However, one can hire a normal hosting service and use it for
+creating pages that are able to run quite interesting applications.
+
+When you hire a hosting service, you will receive a user name and
+will be requested to buy a domain name. Let us assume that Nia owns
+the `medicina.tips` domain, where *medicina* means health care in Latin.
+The domain may be any sequence of chars, but it is a good idea to choose
+names that raise interest in Web users. Since doctors usually know some
+Latin, if one wants to offer expert medical consultancy, `medicina.tips`
+is a good name. Now that Nia has a user name and a domain, she must
+install a few programs in her cloud machine. Here is howshe enters the
+shell:
+
+```shell
+~$ ssh -p2222 nia@medicina.tips
+nia@medicina.tips's password: ***
+```
+
+The 2222 port is used in the secure shell protocol that connects Nia to
+the cloud computer. She needs a password to complete the connection.
+
+```shell
+Last login: Sep 25 18:03:00 2022 from 179.155.71.6
+~$ cd public_html
+~/public_html$ mkdir nim
+~/public_html$ cd nim
+~/public_html/nim$ echo "Addhandler cgi-script .cgi .s .k .n" > .htaccess
+```
+
+The `.htaccess` file specifies an extension for running Nim applications
+on the web. It is possible that, in your cloud machine, the protocol
+for running Nim programs is different from what is described in this
+tutorial. You must ask the administrator for details.
+
+## A web application {-#A}
+
+```Nim
+# File: web.nim
+import strutils, os
+let input = open("rage.md")
+
+let form = """
+<p> <form name='form' method='get'>
+       <input type='type='text' name='Name'>
+    </form>
+</p>
+  """
+
+echo "Content-type: text/html\n\n<html><build>"
+for line in input.lines:
+  if startsWith(line, "##"):
+    echo "<h2>", line.split({'#'}).join(), "</h2>"
+  elif startsWith(line, "#"):
+    echo "<h1>", line.split({'#'}).join(), "</h1>"
+  else: echo line, "<br/>"
+echo form
+let qs = getEnv("QUERY_STRING", "none").split({'+'}).join(" ")
+if qs != "none":
+  let output = open("visitors.txt", fmAppend)
+  write(output, qs&"\n")
+  output.close
+let inputVisitors= open("visitors.txt")
+for line in inputVisitors.lines: echo line&"<br/>"
+inputVisitors.close
+echo "</build></html>"
+
+input.close
+```
+
+(@web) A web application
+
+The idea is to run the program of listing @web from the Internet.
+However, it is not enough to compile the program in your home
+computer and install it in the cloud machine, since the two
+computers are likely different. You need to install a tool chain
+of the cloud computer in your home computer, then use the `nim.cfg`
+file to inform where it is located:
+
+```Nim
+amd64.linux.gcc.path:"/usr/local/Cellar/musl-cross/0.9.8/bin"
+amd64.linux.gcc.exe:"x86_64-linux-musl-gcc"
+amd64.linux.gcc.linkerexe:"x86_64-linux-musl-gcc"
+```
+(@cfg) The `nim.cfg` file
+
+### Script for cross compiling {-#Script}
+
+Of course, this `nim.cfg` file refers to my tool chain installation.
+If necessary, ask for the help of a computer science major to
+install an adequate tool chain.
+
+The task of compiling a web application in your home computer is
+called cross compilation, and needs a special script.
+
+```Nim
+#!/usr/bin/env -S nim --hints:off
+mode = ScriptMode.Silent
+if paramCount() > 2 and fileExists(paramStr(3) & ".nim"): 
+  let
+    app = paramStr(3)
+    src = app & ".nim"
+    exe = "nim" & app & ".k "
+    c = "nim c --nimcache:xx --os:linux --cpu:amd64 -d:release -o:"
+    cc= " --passL:\"-static\""
+  exec c & exe & " " & cc & " " & src
+  echo c & exe & " " & cc & " " & src
+else: echo "Usage: ./build.nims <app without extension>"
+
+```
+(@cross) Script for cross compilation: `cross.nims`
+
+It is advisable to place the three components of the cross compilation
+in the same directory, say `~/nim/os`. Then you can use the script to
+compile the program, as shown below.
+
+```shell
+~/nim/os› ./cross.nims web
+Hint: used config file '/etc/nim/nim.cfg' [Conf]
+Hint: used config file '/Users/ed/nim/os/nim.cfg' [Conf]
+Hint: web [Processing]
+Hint: strutils [Processing]
+Hint: parseutils [Processing]
+Hint: unicode [Processing]
+Hint: os [Processing]
+CC: stdlib_io.nim
+CC: stdlib_system.nim
+CC: stdlib_strutils.nim
+CC: stdlib_times.nim
+CC: stdlib_os.nim
+CC: web.nim
+Hint:  [Link]
+Hint: operation successful (Release Build) [SuccessX]
+nim c --nimcache:xx --os:linux --cpu:amd64\
+  -d:release -o:nimweb.n   --passL:"-static" web.nim
+```
+
+The last step is to send the compiled program to the cloud machine:
+
+```shell
+scp -P2222 nimweb.n strue028@medicina.tips:~/public_html/nim/
+```
+
+### How the application works {-#How}
+
+Let us analyse how the application of listing @web works.
+The `rage.md` file contain a few lines of a poem without
+any structure. The idea is to write it in html, so the
+poem can be visualized through a web browser. The `open`
+command does what its name indicates, it opens a file
+and place the descriptor in the `input` variable.
+
+The `input.lines` iterator feeds the file lines to the
+code that will format them. Basically, if the line
+has a sharp `"#"` prefix, it is marked as title. 
+
+![](figs-prefix/webpage.jpg "A web page")
+
+If a visitor types his or her name on the `Name` field,
+the name is captured by the `"QUERY_STRING"` variable
+and saved in the `visitors.txt` file.
+
+I hope you will be able to modify the program of listing @web,
+and use its concept in your own applications. You can use
+the web for opinion polling, collecting and processing data,
+e-commerce, or just to spread your ideas. In the last case,
+you can use Nim to count how many people visited your site.
+
 # Macros
 
 ```Nim
