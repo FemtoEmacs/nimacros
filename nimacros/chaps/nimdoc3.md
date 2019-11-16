@@ -304,7 +304,15 @@ let form = """
 </p>
   """
 
-echo "Content-type: text/html\n\n<html><build>"
+echo "Content-type: text/html\n\n<html>"
+echo """
+  <head>
+    <meta http-equiv= 'Content-type'
+      content= 'text/html; charset=utf-8' />
+  </head>
+"""
+echo "<body>"
+
 for line in input.lines:
   if startsWith(line, "##"):
     echo "<h2>", line.split({'#'}).join(), "</h2>"
@@ -320,11 +328,10 @@ if qs != "none":
 let inputVisitors= open("visitors.txt")
 for line in inputVisitors.lines: echo line&"<br/>"
 inputVisitors.close
-echo "</build></html>"
+echo "</body></html>"
 
 input.close
 ```
-
 (@web) A web application
 
 The idea is to run the program of listing @web from the Internet.
@@ -376,12 +383,6 @@ compile the program, as shown below.
 Hint: used config file '/etc/nim/nim.cfg' [Conf]
 Hint: used config file '/Users/ed/nim/os/nim.cfg' [Conf]
 Hint: web [Processing]
-Hint: strutils [Processing]
-Hint: parseutils [Processing]
-Hint: unicode [Processing]
-Hint: os [Processing]
-CC: stdlib_io.nim
-CC: stdlib_system.nim
 CC: stdlib_strutils.nim
 CC: stdlib_times.nim
 CC: stdlib_os.nim
@@ -392,7 +393,9 @@ nim c --nimcache:xx --os:linux --cpu:amd64\
   -d:release -o:nimweb.n   --passL:"-static" web.nim
 ```
 
-The last step is to send the compiled program to the cloud machine:
+The last step is to send the compiled program to the cloud machine,
+which can be done through the `scp` command, a version of the `cp`
+command that can send files from a point in the cloud to another.
 
 ```shell
 scp -P2222 nimweb.n strue028@medicina.tips:~/public_html/nim/
