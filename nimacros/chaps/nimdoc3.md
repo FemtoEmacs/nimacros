@@ -254,7 +254,6 @@ processing  on demand for those people connected to a service provider.
 When a  company adheres to cloud computing, it avoids infrastructure
 costs, such as purchasing servers, and keeping them in working order.
 
-
 At the time of this writing, fees for a cloud computing can be pretty
 steep. However, one can hire a normal hosting service and use it for
 creating pages that are able to run quite interesting applications.
@@ -290,18 +289,16 @@ on the web. It is possible that, in your cloud machine, the protocol
 for running Nim programs is different from what is described in this
 tutorial. You must ask the administrator for details.
 
-## A web application {-#A}
 
 ```Nim
 # File: web.nim
-import strutils, os
-let input = open("rage.md")
+import strutils, os, strscans, unicode, uri
 
+let input = open("rage.md")
 let form = """
-<p> <form name='form' method='get'>
-       <input type='type='text' name='Name'>
-    </form>
-</p>
+   <form name='form' method='get'>
+       Visitor: <input type='type='text' name='$#'/>
+    </form> <br/>
   """
 
 echo "Content-type: text/html\n\n<html>"
@@ -310,27 +307,34 @@ echo """
     <meta http-equiv= 'Content-type'
       content= 'text/html; charset=utf-8' />
   </head>
+<body>  
 """
-echo "<body>"
 
+proc tl(input: string; match: var string, start: int): int =
+  match = input[start .. input.high]
+  result = max(1, input.len - start)
+
+var html: string
 for line in input.lines:
-  if startsWith(line, "##"):
-    echo "<h2>", line.split({'#'}).join(), "</h2>"
-  elif startsWith(line, "#"):
-    echo "<h1>", line.split({'#'}).join(), "</h1>"
-  else: echo line, "<br/>"
-echo form
-let qs = getEnv("QUERY_STRING", "none").split({'+'}).join(" ")
-if qs != "none":
-  let output = open("visitors.txt", fmAppend)
-  write(output, qs&"\n")
-  output.close
+  if scanf(line, "## ${tl}", html): echo "<h2> $1 </h2>" % html 
+  elif scanf(line, "# ${tl}", html): echo "<h1>$1</h1>" % html
+  elif scanf(line, "in: ${tl}", html): echo form % html
+  elif scanf(line, "${tl}", html): echo "$#<br/>" % html
+
+let qs = getEnv("QUERY_STRING", "none")
+if qs != "none" and qs.len > 0:
+  let vs = open("visitors.txt", fmAppend)
+  if scanf(qs, "N=${tl}", html):
+     let n= "$#" % html
+     if n != "" and not isSpace(n): write(vs, n.decodeUrl(true) & "\n")
+  vs.close
+
 let inputVisitors= open("visitors.txt")
 for line in inputVisitors.lines: echo line&"<br/>"
 inputVisitors.close
 echo "</body></html>"
-
 input.close
+
 ```
 (@web) A web application
 
@@ -348,7 +352,7 @@ amd64.linux.gcc.linkerexe:"x86_64-linux-musl-gcc"
 ```
 (@cfg) The `nim.cfg` file
 
-### Script for cross compiling {-#Script}
+### Script for cross compiling {-#ScriptFor}
 
 Of course, this `nim.cfg` file refers to my tool chain installation.
 If necessary, ask for the help of a computer science major to
@@ -383,8 +387,6 @@ compile the program, as shown below.
 Hint: used config file '/etc/nim/nim.cfg' [Conf]
 Hint: used config file '/Users/ed/nim/os/nim.cfg' [Conf]
 Hint: web [Processing]
-CC: stdlib_strutils.nim
-CC: stdlib_times.nim
 CC: stdlib_os.nim
 CC: web.nim
 Hint:  [Link]
@@ -401,7 +403,7 @@ command that can send files from a point in the cloud to another.
 scp -P2222 nimweb.n strue028@medicina.tips:~/public_html/nim/
 ```
 
-### How the application works {-#How}
+### How the application works {-#HowWorks}
 
 Let us analyse how the application of listing @web works.
 The `rage.md` file contain a few lines of a poem without
