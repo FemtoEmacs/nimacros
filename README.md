@@ -1,3 +1,6 @@
+# Nim macros
+Due to total lack of interest from the Nim community, this project was discontinued. However, the Della-Vos group will port the book to a functional language with a good support for nested list, dynamic web pages and type inference.
+
 # nimacros
 Documentation for Nim Macros
 
