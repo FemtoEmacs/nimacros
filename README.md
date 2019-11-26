@@ -3,7 +3,7 @@ Documentation for Nim Macros
 
 This work assumes that the reader already knows how to program and is familiar with command line tools. Therefore, as far as programming goes, the only subject that the author discusses is macro designing. Below, you will learn how to build the documentation for Nim macros, by using pandoc. For the convenience of those who don't want to install pandoc, here is a link to the pdf file:
 
-[Documentation for Nim macros](https://github.com/FemtoEmacs/nimacros/blob/master/nimacros/nimacros/nimdoc.pdf)
+[Documentation for Nim macros](https://github.com/FemtoEmacs/nimacros/blob/master/nimdoc.pdf)
 
 If you have a snippet that can help understanding a concept that was not well explained in this tutorial, please send us your snippet. This is a collective work that depends on your collaboration.
 
