@@ -1091,7 +1091,7 @@ practice.
 
 
 # The tacit dimension
-
+\label{chap:tacit}
 There are two persons that are helping me with this
 book, I will call them edu500ac and Marcus. I do not
 know much about Marcus, except that he has three
@@ -1357,7 +1357,6 @@ It seems that infix expressions do not have length.
 I would never discover this if I had not been
 practicing over the last three days. 
 
-[//]: Stopped here 19/11/2019
 
 # Tree constructors
 
@@ -1400,7 +1399,7 @@ The programmer whose nickname is *vindaar* used a quote
 pattern for creating the Abstract Syntactic Tree of a loop.
 
 Another programmer, whose nickname is *akavel*, I believe
-his true name is Mateusz Czapliński, prefer to use the
+his true name is Mateusz Czapliński, prefers to use the
 tree constructor directly.
 
 Languages such as Lisp and Scheme use the same kind of
@@ -1408,9 +1407,12 @@ node for any tree,
 the `consp` data structure, therefore, Lisp and Scheme
 need only a tree constructor, to wit, the `cons` function.
 In an Abstract Syntactic Tree, when it is necessary to
-differenciate a node from the other, a Lisp programmer
-put the identifier first in the list of ramifications.
-An elegant solution that makes Lisp so terse and powerful.
+differentiate one node from the other, a Lisp programmer
+will put the identifier as the first element in the list
+of ramifications. This is an elegant solution that makes
+Lisp terse and powerful.
+
+[//]: stopped here on 03/12/2019
 
 The design of Nim opted by using different nodes. Consider
 the program of listing @akavelIter. The node that represents

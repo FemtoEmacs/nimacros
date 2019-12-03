@@ -4,6 +4,123 @@
                    3d,  arrows, automata, shapes.gates.logic.US,
                    shapes.gates.logic.IEC, calc, 
                     circuits.logic.US}
+
+
+\mainmatter
+# Hello, World!
+
+Since you are reading this tutorial, I assume that you
+want to learn the Nim computer language. It is a long
+tradition in Computer Science to start a tutorial
+concerning programming with a demo that shows how to
+output messages to a terminal. However, you must learn
+many things before actually being able to make such a demo
+work. Therefore, I suggest that you call a geek who has
+majored in Computer Science to run the applications presented
+in this first chapter, which will deal with sending messages
+for printing on a terminal. I will use exercises created by
+Kaushal Modi to get your attention, and entice you into
+Nim programming. Here is the first program:
+
+```Nim
+import os, std/[Terminal]
+
+styledEcho  "Hello, ", styleBright, fgCyan, paramStr(1)
+```
+
+
+Let us assume that the geek, who you hired to coach you
+through this demo, has discovered a way of writing the
+above program into the `hi.nim` file. For instance, she
+could use the `cat` command as shown below.
+
+```Nim
+› cat <<EOT > hi.nim
+import os, std/[Terminal]
+styledEcho "Hi, ", styleItalic, fgGreen, paramStr(1)
+EOT
+```
+
+The next step is to check whether the `hi.nim` file indeed
+contains the program code. The geek will use the `cat`
+command once more.
+
+```Nim
+› cat hi.nim
+import os, std/[Terminal]
+styledEcho "Hi, ", styleItalic, fgBlue, paramStr(1)
+```
+
+Finally, it is necessary to compile the program. This
+means that the geek will convert the `hi.nim` source
+file into an object file, which the machine understands
+well enough in order to carry out the instructions that
+send a message to the terminal.
+
+```shell
+› nim c -o:hi.x --nimcache:xx hi.nim
+```
+
+The final step is to execute the object file to test
+whether it is functioning correctly. Since the Nim
+compiler reported that it generated code with *Success*,
+you can expect that the file `hi.x` is executable. Therefore,
+let us execute it:
+
+
+> › `./hi.x` Edward  
+  Hi, \textcolor{blue}{\it{Edward}}
+
+In chapter \ref{chap:tacit}, I will discuss knowledge.
+Then you will learn that knowledge can be explicit,
+tacit and shared. To discover how this can affect your
+study of the Nim programming language, let us see what
+Socrates said about knowledge.
+
+Calias had two sons. Of course, he spent a lot of money
+hiring teachers for his sons. So, Socrates asked him:
+*"Calias, if your sons were colts or calves, we could
+find and engage a trainer for them who would make them
+excel in their proper qualities, some horse breeder or
+farmer. Now since they are men, whom do you have in mind
+to coach them? Who is an expert in this kind of excellence,
+oratory and political debate? I think you must have given
+thought to this since you have sons. Is there such a person,"*
+Socrates asked, *"or is there not?"* *"For sure there is,"*
+Calias said. *"Who is he?"* Socrates asked, *"What is his
+name, where is he from? and what is his fee?"* Calias
+replied: *"The coach you are looking for, dear Socrates,
+is Evenus, a citizen from Paras. His fee is five minas."* 
+
+At the time of Socrates, the all important human activity
+was political discussion, thus Evenus taught how to debate
+in assemblies and councils. Nowadays, people are more
+interested in computer programming, since these Weapons
+of Math Destruction, as Cathy O'Neil calls them, rule our
+lives. However, let us make an analogy. Let us suppose that
+you have two children, like Calias.  If you wanted them to
+play the violin, instead of programming, you will start out
+buying a violin primer, such as Suzuki's Violin School,
+Volume 1, but you would not expect that your children
+learn music just by reading a book. Therefore, you will
+hire a music coach that will go to your house three
+times a week, in order to supervise your children's progress.
+If the coach insists in explaining only music theory, you
+will probably fire her, as you know one must practice a lot
+to become a proficient musician.
+
+You can use the same rules that apply to music for learning
+computer programming. Then you need a book, a coach and a
+lot of practice, if you want to learn how to write effective
+code. In consequence, it is a good idea that you really
+hire a major in computer science to guide your first steps
+in the computer world. The coach will explain the meaning of
+such terminologies as compiler, library, terminal, files,
+source editors and applications. Another thing that you can
+expect from the coach is that she will perform many activities
+on the computer for you to observe and repeat.
+
+
 # State machines
 My private library has many books in Ancient Greek,
 Latin, German, Esperanto, French, Japanese, Chinese,
