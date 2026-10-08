@@ -858,7 +858,7 @@ programs in 110 hospitals, you need three things:
 Money, training and collaboration. If I had
 not obtained the collaboration of Vindaar and Juan
 Carlos Paco, I would not be able to write about
-Nim macros. If the members of the Della-Vos group
+Nim macros. If the members of the NAScosta group
 were not trained in such fields as biotechnologies,
 microelectronics and medicine, they would not be
 able to build bioFETs or measure ion-drifts in the

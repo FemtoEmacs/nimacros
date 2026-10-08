@@ -1,8 +1,8 @@
 ---
 title: The Nim programming language
 author:
-  - Victor Della-Vos
-  - Proofreading -- Lecale, Marcus
+  - NAScosta
+  - Proofreading -- Lecale
   - Illustrations -- Priscila
 rights: MIT License
 language: en-US
