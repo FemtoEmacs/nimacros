@@ -627,7 +627,7 @@ language is the main way of executing programs and doing work
 on a computer.
 
 SBEmacs provides a shell command window. From the file you are
-editing, press **M-!** (Esc, then `!`) or **C-x @**. Write a command
+editing, press **M-!** (Esc followed by the exclamation mark) or `C-x @`. Write a command
 in the lower window, then press **SEND** or **C-c s**. The result
 appears in `*output*`. **C-x 1** closes the shell window and returns
 to the file; **M-!** opens a fresh command window.

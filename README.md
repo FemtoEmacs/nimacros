@@ -18,8 +18,10 @@ The Nim programming language is very easy to install. Follow the instructions on
 The first three chapters now use SBEmacs to edit, compile and run the
 examples, including the Shell chapter. The Nim mode and its installation
 instructions are in [sbemacs/README.md](sbemacs/README.md).
-The existing PDF has not yet been regenerated; read the updated
-[chapter source](nimacros/chaps/nimdoc1.md) for these instructions.
+The updated [PDF tutorial](nimdoc.pdf) includes these instructions.
+The [LaTeX source](nimacros/nimdoc.tex) is generated from the Markdown
+chapters with Pandoc. From `nimacros/`, run `make D=nimdoc` to rebuild
+both formats and refresh the PDF linked above.
 
 ## Tutorial
 

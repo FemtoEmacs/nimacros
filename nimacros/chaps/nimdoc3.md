@@ -1167,7 +1167,7 @@ given in liters or gallons.
   \draw[fill=black!100!white](2.5,2,4) circle(.08);
 \end{tikzpicture}
 \caption{Position}
-\label{fig:position}
+\label{fig:position-coordinates}
 \end{figure}
 
 According to Descartes, there exists multidimensional

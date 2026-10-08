@@ -1,7 +1,7 @@
 D=
-PDF_ARGS = -V geometry:margin=1in -V documentclass=report
+PDF_ARGS = -V geometry:margin=1in -V documentclass=book
 SYNTAX= --syntax-definition nimrod.xml
-ENG= --pdf-engine=xelatex
+ENG= --pdf-engine=pdflatex
 
 ifeq ($(D),)
 abort:
@@ -9,7 +9,11 @@ abort:
 endif
 
 all:
-	pandoc $(PDF_ARGS) chaps/*.md  $(D).md $(SYNTAX) -o $(D).pdf
+	pandoc --standalone $(PDF_ARGS) chaps/*.md $(D).md $(SYNTAX) -o $(D).tex
+	pandoc $(PDF_ARGS) chaps/*.md $(D).md $(SYNTAX) $(ENG) -o $(D).pdf
+	cp $(D).pdf ../$(D).pdf
+
+.PHONY: all clean
 clean:
 	rm -rf $(D).pdf
 
