@@ -23,7 +23,7 @@ Kaushal Modi to get your attention, and entice you into
 Nim programming. Here is the first program:
 
 ```Nim
-import os, std/[Terminal]
+import os, std/terminal
 
 styledEcho  "Hello, ", styleBright, fgCyan, paramStr(1)
 ```
@@ -31,45 +31,47 @@ styledEcho  "Hello, ", styleBright, fgCyan, paramStr(1)
 
 Let us assume that the geek, who you hired to coach you
 through this demo, has discovered a way of writing the
-above program into the `hi.nim` file. For instance, she
-could use the `cat` command as shown below.
+above program into the `hi.nim` file. This time she uses
+SBEmacs. Open SBEmacs, press **C-x C-f**, and type the path
+of `hi.nim` in your working folder. Enter the following program:
 
 ```Nim
-› cat <<EOT > hi.nim
-import os, std/[Terminal]
-styledEcho "Hi, ", styleItalic, fgGreen, paramStr(1)
-EOT
-```
-
-The next step is to check whether the `hi.nim` file indeed
-contains the program code. The geek will use the `cat`
-command once more.
-
-```Nim
-› cat hi.nim
-import os, std/[Terminal]
+import os, std/terminal
 styledEcho "Hi, ", styleItalic, fgBlue, paramStr(1)
 ```
 
+Press **SAVE** or **C-x C-s**. The program is visible in the
+editor, so there is no need to use `cat` to check the file.
+Nim mode colors the source and indents with two spaces when
+you press **TAB**. If necessary, use **M-x load-mode**, enter
+**nim**, and press Enter. The mode is distributed in the
+repository's `sbemacs/nim-mode.lisp`; installation is explained
+in `sbemacs/README.md`.
+
 Finally, it is necessary to compile the program. This
 means that the geek will convert the `hi.nim` source
-file into an object file, which the machine understands
-well enough in order to carry out the instructions that
-send a message to the terminal.
+file into an executable file, which the machine understands
+well enough in order to carry out the instructions.
 
-```shell
-› nim c -o:hi.x --nimcache:xx hi.nim
+Choose **MORE**, then **Build**, or type **M-x nim-build**.
+SBEmacs saves the source and calls the Nim compiler. The lower
+window shows the compiler output. **C-x 1** closes this window
+and returns to the source.
+
+The final step is to execute the program to test
+whether it is functioning correctly. Choose **MORE**, then
+**Run**, or type **M-x nim-run**. At **Nim program arguments:**
+type `Edward` and press Enter. This compiles and runs the
+current file. Its output appears inside SBEmacs:
+
+```text
+Hi, Edward
 ```
 
-The final step is to execute the object file to test
-whether it is functioning correctly. Since the Nim
-compiler reported that it generated code with *Success*,
-you can expect that the file `hi.x` is executable. Therefore,
-let us execute it:
-
-
-> › `./hi.x` Edward  
-  Hi, \textcolor{blue}{\it{Edward}}
+The shell output buffer displays plain text; it does not render
+the terminal's blue italic styling. To obtain plain output you
+can also use `echo "Hi, ", paramStr(1)`. No separate terminal
+window is needed to edit, compile or run this example.
 
 In chapter \ref{chap:tacit}, I will discuss knowledge.
 Then you will learn that knowledge can be explicit,
@@ -302,18 +304,17 @@ with meaningful names, the program becomes clearer and cleaner.
 After compiling the program of listing @zeller, one can calculate
 the day of the week as a number between 0 and 6, which correspond to
 Sunday, Monday, Tuesday, Wednesday, Thursday, Friday and Saturday.
-For the time being, you do not need to worry about compilation
-and running a program on the terminal. This book dedicates a whole chapter to the use of a text terminal. In any case, here is an example
-of running the zeller congruence:
+Open `zeller.nim` with **C-x C-f** in SBEmacs, and save the program
+of listing @zeller. Choose **MORE → Run**, or **M-x nim-run**.
+At **Nim program arguments:** enter `2016 8 31`. The output window
+shows the result:
 
-```Shell
-› nim c -o:zeller.x -d:release --hints:off --nimcache:xx zeller.nim
-CC: zeller.nim
-
-› ./zeller.x 2016 8 31
+```text
 3
-
 ```
+
+Use **C-x 1** to return to the source. Chapter 3 explains how
+to submit the compiler command yourself through SBEmacs's shell.
 
 This means that August 31 of 2016 fell on a Wednesday. 
 
@@ -379,11 +380,15 @@ for-loop, that repeats a change of state over generations
 from 2 through `n` of rabbits. Here is how the program is
 compiled and executed:
 
-```
-› nim c --nimcache:xx -o:rabbits.x -d:release --hints:off iterfib.nim
-› ./rabbits.x 5
+Open `iterfib.nim` in SBEmacs, save it, and use **M-x nim-run**.
+Enter `5` at the arguments prompt. The output is:
+
+```text
 13
 ```
+
+Use **C-x 1** to return to the source. Repeat with `12` to obtain
+`377`, the number of pairs at the end of Fibonacci's year.
 
 ## Recursion
 Another way to discover the number of pairs in the previous
@@ -405,6 +410,11 @@ echo fib(paramStr(1).parseInt)
 ```
 
 (@recfib) Recursive Fibonacci function
+
+Open `recfib.nim`, save the listing, and run **M-x nim-run** with
+argument `5`. SBEmacs displays `13`. Repeat with `12` to obtain `377`.
+You can visit the procedure with **M-x nim-next-definition** and
+return to the previous one with **M-x nim-previous-definition**.
 
 The program of listing @recfib has many novelties. The first one is
 the conditional execution of a sequence of statements. For instance, `result=n+1` sets `result` to `n+1`, but only if the condition `n<2`
@@ -616,24 +626,13 @@ When accessing the OS through a text-based terminal, a shell
 language is the main way of executing programs and doing work
 on a computer.
 
-In order not to scare off the feeble-minded, many operating
-systems hide access to the text terminal. In some distribution
-of Linux, you need to maintain the `Alt` key down, then press
-the `F2` key to open a dialog box, where you must type the
-name of the terminal you want to open. If you are really lucky,
-you may find the icon of the terminal  on the tool bar.
-If the method for opening the text terminal is not so obvious,
-you should ask for help from a student majoring in Computer Science.
+SBEmacs provides a shell command window. From the file you are
+editing, press **M-!** (Esc, then `!`) or **C-x @**. Write a command
+in the lower window, then press **SEND** or **C-c s**. The result
+appears in `*output*`. **C-x 1** closes the shell window and returns
+to the file; **M-!** opens a fresh command window.
 
 ## The prompt {-#The}
-The shell prompt is where one types commands. The prompt
-has different aspects, depending on the configuration of
-the terminal. In Nia's machine, it looks something like
-this:
-
-```Shell
-~$ _
-```
 
 Files are stored in folders. Typically, the prompt shows the
 folder where the user is currently working. The main duty of
@@ -641,52 +640,54 @@ the operating system is to maintain the content of the mass
 storage devices in a tree structure of files and folders.
 Folders are also called *directories*, and like physical
 folders or cabinets, they organize files. A folder can be put
-inside another folder. In a given machine, there is a folder
-reserved for duties carried out by the administrator. This
-special folder is called `HOME` or personal directory.
+inside another folder. Your `HOME` is your personal directory.
 
-Now, let us learn a few commands to control the terminal
-and get things moving.
+In SBEmacs, the shell command starts in the directory of the
+file from which you pressed **M-!**. There is no persistent shell
+prompt. Each **SEND** starts a new shell process: a `cd` command
+does not change the directory of the next submission. Put `cd`
+and the command that depends on it in the same submission:
 
-```bash
-nim/nimacros# cd ~
-~$ mkdir wrk
-~$ cd wrk
-~/wrk$ cat <<EOF > hi.nim
-heredoc> import os
-heredoc> stdout.writeLine "Hello ", paramStr(1)
-heredoc> EOF
-~/wrk$ ls
-hi.nim
-~/wrk$ cat hi.nim
+```sh
+mkdir -p "$HOME/wrk" && cd "$HOME/wrk" && pwd
+```
+
+The commands in this chapter are for the macOS/Linux shell.
+On Windows, SBEmacs calls `cmd.exe`, whose commands and quoting
+are different. On macOS/Linux it calls `/bin/sh`, rather than
+your interactive zsh configuration.
+
+Press **C-x 1**, then **C-x C-f**, to create `~/wrk/hi.nim` in
+SBEmacs. Type and save this program:
+
+```Nim
 import os
 stdout.writeLine "Hello ", paramStr(1)
 ```
 
-The first command in the above dialog is `cd ~` that changes
-the prompt to the `HOME` folder, which is represented by a tilde.
-The second command, `mkdir wrk`, creates the `wrk` folder
-inside the `HOME` directory. The `cd wrk` statement puts
-the cursor prompt inside the newly created `wrk` directory. 
+From this file, **M-!** starts in `~/wrk`. Submit:
 
-The `cat <<EOF > hi.nim` command sends to the `hi.nim` file
-a text that terminates with the `EOF` token. The terminating
-token does not need to be `EOF`, in fact, you can choose anything
-to close the input. The `<<EOF` is a kind of arrow pointing
-to `cat`, in order to indicate that the input will be
-delivered to the `cat` command. By analogy, `>` points to
-file `hi.nim`, which is the destination of the `cat` output.
+```sh
+ls && cat hi.nim
+```
 
-In general, people use `cat` for printing the contents of a file,
-exactly as Nia did when she issued the `cat hi.nim` command in
-the above example. However, I could not resist the idea of
-providing you with a more interesting use for the `cat` command.
+The `ls` command lists the files stored inside the folder. In
+general, people use `cat` for printing the contents of a file.
+We edit the file in SBEmacs and use `cat` here only to inspect it.
 
-Finally, in the above example, the `ls` command lists the files,
-which are stored inside the `wrk` folder. The combination of `ls`
-and `cd` permits the browsing of the tree of files and folders,
-therefore one must learn how to use it well, which will be taught
-in the following pages.
+SBEmacs joins entered lines as command continuations. They do
+not become separate shell commands automatically. Use `&&` to
+run the next command only if the preceding one succeeds, or
+`;` when the next command should run regardless. Keep each example
+on one line when possible. Do not copy a printed shell prompt
+such as `~/wrk$`, or the program's output, into the command window.
+
+The shell window captures output and supplies empty standard input.
+It is suitable for compiler commands and programs receiving arguments
+or files. For a program that reads standard input, supply a pipe or
+redirection, such as `printf '3 4 +\n' | ./rdwrt.x`; it cannot accept
+interactive keystrokes. A command runs synchronously, so the editor
+waits until that command ends.
 
 ### pwd {-#pwd} 
 The `pwd` command informs the cursor prompt position in the
@@ -697,9 +698,8 @@ command from her `HOME` folder, she obtains the result
 that is shown below.
 
 ```Shell
-~$ set -k
-~$ pwd      # shows the current folder.
-Users/nia
+$ pwd
+/Users/nia/wrk
 ```
 
 One uses a path to identify a nest of folders. In a path,
@@ -715,9 +715,9 @@ prefixed with the `#` hash char, as you can see in the above
 chat. Therefore, when the computer sees a `#` hash char,
 it ignores everything to the end of the line.
 
-In the *Z shell* (*zsh*), it is necessary to use the `set -k`
-command to activate comments, but in the *bash* shell, comments
-are always active by default.
+The noninteractive `/bin/sh` used by SBEmacs recognizes `#`
+comments without a setup command. Avoid a trailing comment in a
+multiline submission: it can hide the commands joined after it.
 
 
 ### mkdir wrk {-#mkdir}
@@ -730,14 +730,16 @@ folder with the `Users/nia/wrk` path.
 ### cd wrk {-#cd} 
 One can use the `cd <folder name>` command to enter the named
 directory. The `cd ..`  command takes Nia to the parent of the
-current directory. You also learned that `ch ~` sends the prompt
+current directory. You also learned that `cd ~` sends the prompt
 to the `HOME` directory. Thanks to the `cd` command, one can
 navigate through the tree of folders and directories.
 
 ### Tab {-#Tab}
-If you want to go to a given directory, type part of the
-directory path, and then press *Tab*. The shell will complete the
-folder name for you.
+SBEmacs completes filenames with **TAB** in **C-x C-f**. Its shell
+command buffer is an editable buffer, not an interactive shell;
+TAB there does not provide shell filename completion. Open the file
+with **C-x C-f** to choose the working directory, or write its path
+explicitly in the command.
 
 
 ### Home directory {-#Home}
@@ -776,60 +778,13 @@ string to a text file. It does not erase the previous content
 of the `ifib.nim` file. Of course, you should replace the
 string or the file name, as necessity dictates.
 
-```Shell
-~$ cd wrk      # transfer action to the wrk file
-~/wrk$ echo 'import os, strutils\n' > ifib.nim
-~/wrk$ {
-cursh> echo 'proc fib(n: int): int ='
-cursh> echo '   var (r1, r2) = (2, 1)'
-cursh> } >> ifib.nim
-~/mwrk$ ls
-hi.nim ifib.nim
-~/wrk$ cat ifib.nim
-import os, strutils
-
-proc fib(n: int): int =
-   var (r1, r2) = (2, 1)
-```
-
-The above example shows that you can use braces to create
-a sequence of `echo` commands. The `cat ifib.nim` prints
-the contents of file `ifib.nim`,  as you learned before.
-
 ### Extended example of cat {-#Extended}
-Below you will find an extended example of a chat between Nia
-and *zsh* with many examples of `cat` and `echo`. The `\n`
-directive in the string `import os, strutils\n` provokes a
-line break. Note that Nia replaced `EOF` with `EOT` just to
-show that it can be done.
 
-```bash
-~$ cd wrk      # transfer action to the wrk file
-~/wrk$ echo 'import os, strutils\n' > ifib.nim
-~/wrk$ {
-cursh> echo 'proc fib(n: int): int ='
-cursh> echo '   var (r1, r2) = (2, 1)'
-cursh> } >> ifib.nim
-~/wrk$ ls
-hi.nim   ifib.nim
-~/wrk$ cat <<EOT >> ifib.nim
-heredoc>    for i in 2..n:
-heredoc>       (r1, r2) = (r1+r2, r1)
-heredoc>    result= r1
-heredoc>
-heredoc> echo fib(paramStr(1).parseInt)
-heredoc> EOT
-~/wrk$ cat ifib.nim
-import os, strutils
-
-proc fib(n: int): int =
-   var (r1, r2) = (2, 1)
-   for i in 2..n:
-      (r1, r2) = (r1+r2, r1)
-   result= r1
-
-echo fib(paramStr(1).parseInt)
-```
+For source code, Nia uses SBEmacs instead of assembling a file
+with `echo` or a here-document. Press **C-x C-f**, open `ifib.nim`,
+and write the iterative Fibonacci program from Chapter 2. Save
+with **C-x C-s**. Use **M-!** and submit `cat ifib.nim` to inspect
+the saved file. The `cat` output should match the text in the editor.
 
 ### ls {-#ls} 
 By convention, a file name has two parts, the *id* and the
@@ -868,6 +823,11 @@ following letters:
 + `r` -- read permission.
 + `w` -- write permission.
 + `x` -- execute permission.
+
+The transcripts below retain the printed prompts to show the working
+folder and results. In SBEmacs, submit only commands. For sequences
+that change directory, join commands with `&&` in one submission;
+for example `cd "$HOME/wrk" && cp ifib.nim fib.nim && ls`.
 
 ### cp {-#cp}
 The `cp ifib.nim fib.nim` makes a copy of a file. You can
@@ -934,7 +894,7 @@ bkp      fib.nim  hi.nim   ifib.nim
 In most Linux distributions, the pen drive is seen as
 a folder inside the `/media/nia/` directory, where you
 should replace `nia` with your user name. However, in
-the Macintosh, the pen drive appears at the `/Volume/`
+the Macintosh, the pen drive appears at the `/Volumes/`
 folder. The commands `cp`, `rm` and `ls` see the pen
 drive as a normal folder.
 
@@ -958,72 +918,35 @@ to get the thing done if you put in some efforts of your own.
 Ask for help from a computer science major, if you think
 that the task is above your station.
 
-You should search the Internet for the Nim language compiler
-and download it. Then, extract, build and install the
-distribution, as shown below.
+Follow the installation instructions at <https://nim-lang.org/install.html>.
+Installation may require an external installer or a system password;
+the SBEmacs shell command buffer cannot answer a password prompt.
+Once Nim is installed, open **M-!** in SBEmacs and submit:
 
-To protect you against malware attacks, one needs
-a password to write into the folders where critical
-applications are installed. The `sudo` tool will
-ask you for a password. If you type the correct password,
-the `install.sh` script will be granted the permission to
-install Nim in your computer.
-
-```bash
-~$ mkdir source
-~$ cd source
-~/source$ mv ~/Downloads/nim-x.y.z-os.tar.xz .
-~/source$ tar xfJ nim-x.y.z-os.tar.xz
-~/source$ cd nim-x.y.z
-source/nim-x.y.z$ ls *.sh
-build.sh     deinstall.sh install.sh
-source/nim-x.y.z$ ./build.sh
-source/nim-x.y.z$ sudo ./install.sh /usr/local/bin
+```sh
+nim --version
 ```
 
-Finally, you should test the installation with a
-small program, as shown in the shell chat below. 
-During the process of compilation, Nim creates
-auxiliary files in the folder indicated by the
-`--nimcache` option. I usually place these files
-in the `xx` folder, which I remove to liberate
-space in my machine.
+Finally, you should test the installation with the `hi.nim` program
+from Chapter 1. Open that file in SBEmacs and choose **MORE → Run**,
+with argument `Ed`. The output should greet Ed. During compilation,
+Nim creates auxiliary files in its cache directory. If you want to
+choose that directory explicitly, submit this command from `hi.nim`:
 
-```bash
-source/nim-1.0.3$ cd ..
-~/source$ mkdir tests
-~/source$ cd tests
-source/tests$ cat <<EOT > hi.nim
-heredoc> import os
-heredoc>
-heredoc> stdout.writeLine "Hello ", paramStr(1)
-heredoc> EOT
-source/tests$ nim c -o:hi.x -d:release --hints:off --nimcache:xx hi.nim
-CC: stdlib_io.nim
-CC: stdlib_system.nim
-CC: stdlib_posix.nim
-CC: stdlib_times.nim
-CC: stdlib_os.nim
-CC: hi.nim
-source/tests$ ./hi.x Ed
-Hello Ed
-source/tests$ ls
-hi.nim hi.x   xx
-source/tests$ rm -rf xx
+```sh
+nim c -r --hints:off --nimcache:xx hi.nim Ed
 ```
 
-# Emacs / lem
+# SBEmacs
 
 You can create source files by using the `cat` command.
 However, for serious work, you need a text editor such
-as lem, which is a clone of Emacs written in the Common
-Lisp programming language. I will not try to explain how
-to install lem, since the procedure changes over time and
-from machine to machine. Therefore, search the web for
-adequate binaries and instruction on how to install the
-thing on your computer.
+as SBEmacs, an Emacs-like editor driven by Common Lisp.
+The Nim mode provides coloring, indentation, definition navigation,
+and Build/Run commands. Install the current SBEmacs and the mode as
+explained in `sbemacs/README.md` in this repository.
 
-In the following cheat sheet for lem, `C-` is the `Ctrl` key, `M-`
+In the following cheat sheet for SBEmacs, `C-` is the `Ctrl` key, `M-`
 denotes the `Alt` key, $\kappa$ can be any key, and `Spc`
 represents the space bar. Thus, `C-`$\kappa$ means: Press and
 release the `Ctrl` key and the $\kappa$ key simultaneously.
@@ -1034,7 +957,8 @@ the text you  want to find
 to find other text instances
 + C-r -- reverse search 
 + `C-k` -- kill the text from the cursor, until the end of the line
-+ `C-h` -- backspace: erase the char before the cursor and move backwards
++ `Backspace` -- erase the char before the cursor and move backwards
++ `C-h` -- show the keybinding help page
 + `C-d` -- delete char under the cursor 
 + `C-Spc` then move the cursor -- select a region
 + `M-w` -- save selected region in the kill ring
@@ -1065,8 +989,8 @@ and `κ`, one after the other.
 + `C-x C-f` -- open a file into a new buffer
 + `C-x C-w` -- write file with new name
 + `C-x C-s` -- save the current file
-+ `C-x C-c` -- exit the lem source editor
-+ `C-x C-i` -- insert file at current cursor position
++ `C-x C-c` -- exit the SBEmacs source editor
++ `C-x C-i` -- indent the selected region
 
 The `C-x ?` command --  describes a key stroke. Press
 the `Ctrl` key and the `x` key at the same time, release
@@ -1079,19 +1003,14 @@ prompt you with the `describe-key` invitation. If you type
 
 - `describe-key: C-x C-f find-file`
 
-The `C-x @` command -- pipes a shell instruction.
-Keep the `Ctrl` key down, then press the `x` key.
-Release both keys, then press the `@` key. The
-lem editor will prompt for a shell command. Type
-`ls`, for instance. It will open a temporary buffer
-and show a list of file names.  There are many commands
-that read information from the minibuffer:
+The `C-x @` command opens the shell command window. Keep the
+`Ctrl` key down, then press `x`. Release both keys, then press
+`@`. Type `ls` in the command window and press **C-c s** or **SEND**.
+The output window shows the file names. **C-x 1** returns to the source.
 
-+ `C-x C-f` -- retrieves the file you want to open from the minibuffer
-+ `C-x C-s` -- reads the text sample you search for from the minibuffer
-+ `C-x C-i` -- in the minibuffer, type a file name to insert at current
-               cursor position
-
++ `C-x C-f` -- reads the file name from the minibuffer.
++ `C-s` -- reads the text sample you want to search for.
++ `M-x nim-run` -- reads program arguments from the minibuffer.
 
 You must type `C-g`, whenever you want to cancel any
 command that needs to read a complement from the minibuffer.
@@ -1114,9 +1033,9 @@ press `x`, then release both keys and hit the `κ` key.
 You can maintain many files open at the same time. I mean, when
 you open a new file with the `C-x C-f` command, the buffer on
 which you were working is not discarded, but remains in the
-background. When you type `C-x b`, lem takes the cursor to the
+background. When you type `C-x b`, SBEmacs takes the cursor to the
 minibuffer, where you can use the arrow keys to scroll and choose
-the next buffer you want to edit. If you press `C-x C-b`, lem
+the next buffer you want to edit. If you press `C-x C-b`, SBEmacs
 provides a list of all buffers available, so you can choose one.
 In this case, issue a `C-x o` command so that the cursor switches
 to the buffer list window, from where you can choose the destination
@@ -1126,32 +1045,18 @@ buffer.
 
 (@minibuffer) Fibonacci Function
 
-The figure above shows the editor. On the minibuffer you can
+The figure above shows the original editor used for this tutorial.
+SBEmacs uses the same style of minibuffer. In the figure you can
 read the following message that was left there as the byproduct
 of a `C-x C-s` save file command: 
 
 > `Wrote /Users/ed/work/fib.nim`
 
-Let us test the editor. Call `lem` from the `work` directory
-that you created previously:
-
-```bash
-~$ cd work
-~/work$ ls
-bkp  hi.nim   ifib.nim xx
-~/work$ lem fib.nim
-```
-
-Type the code shown in figure @minibuffer, then exit the
-editor with the `C-x C-c` command. Next, compile and run
-the program, as shown below.
-
-```bash
-~/work$ nim c -o:fib.x -d:release --nimcache:xx --hints:off fib.nim
-~/work$ ./fib.x 5
-13
-```
-
+Let us test the editor. In SBEmacs, open `~/wrk/fib.nim` with
+**C-x C-f**. Type the iterative Fibonacci program from Chapter 2,
+then save with **C-x C-s**. Choose **MORE → Run**, enter `5` at the
+arguments prompt, and read `13` in the output window. **C-x 1**
+returns to the source; **QUIT** or **C-x C-c** exits the editor.
 
 ### Meta keys {-#Meta}
 
@@ -1164,31 +1069,22 @@ down and press the `κ` key.
 + `M->` -- go to the end of buffer
 + `M-<` -- go to the beginning of buffer
 
-It is pretty hard to press the `M-<` command. You must
-keep the `Alt` key down, then press the `Shft` and `<`
-keys together. However, there is a `~/.lem/init.el`
-initialization file where one can define new commands.
-So, let's add the following commands to the `~/.lem/init.el` file:
+On a Mac, you can use Esc followed by the next key for Meta.
+SBEmacs reads optional personal settings from `~/.sbemacs/init.lisp`.
+For instance, the following settings provide two alternative keys:
 
 ```Lisp
-;; -*- lisp -*-
-(in-package :lem)
-
-(define-key *global-keymap* "Escape" 'keyboard-quit)
-
-(define-key *global-keymap* "C-/" 'undo)
-
-(define-key *global-keymap* "M-p" 'move-to-beginning-of-buffer)
-(define-key *global-keymap* "M-n" 'move-to-end-of-buffer)
+(in-package #:sbemacs-user)
+(global-set-key "M-p" (lambda () (run-key-as-typed "M-<")))
+(global-set-key "M-n" (lambda () (run-key-as-typed "M->")))
 ```
-Now, next time you enter lem, if you press `M-p`, you
-will go to the beginning of the buffer. Likewise, if
-you press `M-n`, the cursor will be sent to the end
-of the buffer.
+
+Next time you enter SBEmacs, **M-p** goes to the beginning of the
+buffer and **M-n** to its end.
 
 ### Search {-#Search}
 If you press `C-s`, the computer enters into search
-mode. First, lem prompts you for the text snippet S
+mode. First, SBEmacs prompts you for the text snippet S
 that you want it to find in the current buffer. While
 you are still typing, the cursor jumps to the first
 occurrence of the text snippet S. To repeat the search,
@@ -1199,7 +1095,7 @@ must type `C-r` to reverse the direction of the search.
 ### Go to line {-#Go}
 When you try to compile code containing errors, the compiler
 usually reports the line number where the error occurred.
-If you press `M-g`, lem prompts for a line number. As soon
+If you press `M-g`, SBEmacs prompts for a line number. As soon
 as you type the number and press the `Enter` key, the cursor
 jumps to the line where the error occurred.
 

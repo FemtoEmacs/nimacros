@@ -13,6 +13,14 @@ The Nim programming language is very easy to install. Follow the instructions on
 
 [Documentation for Nim macros](https://nim-lang.org/install.html)
 
+## SBEmacs
+
+The first three chapters now use SBEmacs to edit, compile and run the
+examples, including the Shell chapter. The Nim mode and its installation
+instructions are in [sbemacs/README.md](sbemacs/README.md).
+The existing PDF has not yet been regenerated; read the updated
+[chapter source](nimacros/chaps/nimdoc1.md) for these instructions.
+
 ## Tutorial
 
 The goal of this project is to prepare documentation on Nim macros. You will find two things in this repository. The first one is a Portable Document Format (PDF) file, where you can learn how to write macros in Nim. It is work in progress, therefore you will find many spelling mistakes, grammar errors and, what is worse, incomplete explanations. I hope that these shortcomings will disappear with time and hard work from my collaborators. The other things you will find here are short examples, that you can compile with the help of a Makefile. Let us suppose that you want to compile the `rdwrt.nim` source code file, that implements an emulator for an HP calculator. From the `src` folder, type the following command:
